@@ -2,10 +2,14 @@
 #include "skills/addition.h"
 #include "skills/subtraction.h"
 #include "skills/multiplication.h"
+#include "db.h"
 using namespace std;
 
 int main()
 {
+        initialize_database();
+        insert_default_values();
+        read_database();
         int problemType;
         int* problem;
         string operand;
@@ -45,3 +49,5 @@ int main()
 
        return 0;
 }
+
+
