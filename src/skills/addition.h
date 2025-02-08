@@ -1,2 +1,2 @@
 #pragma once
-int* generate_problem();
+int* generate_addition_problem();
