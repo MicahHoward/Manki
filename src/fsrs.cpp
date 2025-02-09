@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include "db.h"
+#include "utils.h"
 using namespace std;
 
 // This functions were made following this explanation: https://expertium.github.io/Algorithm.html
@@ -47,17 +48,31 @@ int update_difficulty(int skillID, float difficulty, int grade)
         return 0;
 }
 
-// time is the number of days since last review
-int update_retrievability(int skillID, float time, float stability)
-{
-        float newRetrievability =  pow((1 + (19/81)*(time/stability)),-0.5);
-        update_skill_value(skillID, "RETRIEVABILITY", newRetrievability);
-        return 0;
-}
-
 int update_last_review_time(int skillID, string reviewTime)
 {
         update_skill_value(skillID, "LAST_REVIEW_TIME", reviewTime);
+        return 0;
+}
+
+// time is the number of days since last review
+int update_retrievability()
+{
+        int numberOfSkills = get_number_of_skills();
+        for(int skillID = 0; skillID < numberOfSkills; skillID++){
+                float time = (get_current_time() - get_skill_value(skillID, "LAST_REVIEW_TIME"))/86400.0;
+                float stability = get_skill_value(skillID, "STABILITY");
+                float newRetrievability =  pow((1 + (19.0/81.0)*(time/stability)),-0.5);
+                update_skill_value(skillID, "RETRIEVABILITY", newRetrievability);
+        }
+        return 0;
+}
+
+int update_retrievability_on_review(int skillID)
+{
+        float time = 0;  
+        float stability = get_skill_value(skillID, "STABILITY");
+        float newRetrievability =  pow((1 + (19.0/81.0)*(time/stability)),-0.5);
+        update_skill_value(skillID, "RETRIEVABILITY", newRetrievability);
         return 0;
 }
 

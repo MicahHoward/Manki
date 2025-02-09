@@ -36,8 +36,7 @@ int update_fsrs_on_answer(int skillID, int grade)
 
         update_last_review_time(skillID, to_string(reviewTime));
 
-        // time = 0, since update_fsrs is only called on review
-        update_retrievability(skillID, 0, currentStability);
+        update_retrievability_on_review(skillID);
         return 0;
 }
 
@@ -65,6 +64,9 @@ int main()
         initialize_database();
         insert_default_values();
         read_database();
+        update_retrievability();
+        read_database();
+
         int skillID;
         int* problem;
         string operand;

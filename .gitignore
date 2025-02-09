@@ -1,0 +1,4 @@
+#ignore all .db files
+*.db
+#ignore src/test
+src/test
