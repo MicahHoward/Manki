@@ -15,6 +15,13 @@ static int callback(void* data, int argc, char** argv, char** azColName)
         return 0;
 }
 
+int numberOfSkills;
+static int get_number_of_skills_callback(void* data, int argc, char** argv, char** azColName)
+{
+        numberOfSkills++;
+        return 0;
+}
+
 int initialize_database()
 {
         sqlite3* DB;
@@ -102,6 +109,32 @@ int read_database()
                 cout << "Selection completed!" << endl;
         }
         return 0;
+}
+
+int get_number_of_skills()
+{
+        sqlite3* DB;
+        int exit = 0;
+        exit = sqlite3_open("manki.db", &DB);
+        string data("CALLBACK FUNCTION");
+
+        string sql("SELECT * FROM SKILL;");
+
+        if(exit){
+                cerr << "Error opening DB " << sqlite3_errmsg(DB) << endl; 
+                return -1;
+        } else{
+                cout << "DB opened successfully!" << endl;
+        }
+
+        exit = sqlite3_exec(DB, sql.c_str(), get_number_of_skills_callback, (void*)data.c_str(), NULL);
+        if(exit != SQLITE_OK){
+                cerr << "Error selecting!" << endl;
+                return -1;
+        } else{
+                cout << "Selection completed!" << endl;
+        }
+        return numberOfSkills;
 }
 
 float currentSkillValue;
