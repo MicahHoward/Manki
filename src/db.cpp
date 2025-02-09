@@ -33,7 +33,7 @@ int initialize_database()
                      "DIFFICULTY FLOAT NOT NULL,"
                      "LAST_REVIEW_TIME INT NOT NULL);");
         int exit = 0;
-        exit = sqlite3_open("manki.db", &DB);
+        exit = sqlite3_open("../data/manki.db", &DB);
 
         if(exit){
                 cerr << "Error opening DB " << sqlite3_errmsg(DB) << endl; 
@@ -66,7 +66,7 @@ int insert_default_values()
 
 
         int exit = 0;
-        exit = sqlite3_open("manki.db", &DB);
+        exit = sqlite3_open("../data/manki.db", &DB);
 
         if(exit){
                 cerr << "Error opening DB " << sqlite3_errmsg(DB) << endl; 
@@ -89,7 +89,7 @@ int read_database()
 {
         sqlite3* DB;
         int exit = 0;
-        exit = sqlite3_open("manki.db", &DB);
+        exit = sqlite3_open("../data/manki.db", &DB);
         string data("CALLBACK FUNCTION");
 
         string sql("SELECT * FROM SKILL;");
@@ -115,7 +115,7 @@ int get_number_of_skills()
 {
         sqlite3* DB;
         int exit = 0;
-        exit = sqlite3_open("manki.db", &DB);
+        exit = sqlite3_open("../data/manki.db", &DB);
         string data("CALLBACK FUNCTION");
 
         string sql("SELECT * FROM SKILL;");
@@ -148,7 +148,7 @@ float get_skill_value(int skillID, string attribute)
 {
         sqlite3* DB;
         int exit = 0;
-        exit = sqlite3_open("manki.db", &DB);
+        exit = sqlite3_open("../data/manki.db", &DB);
         string data("CALLBACK FUNCTION");
 
         string sql("SELECT " + attribute + " FROM SKILL WHERE ID = " + to_string(skillID) + ";");
@@ -176,7 +176,7 @@ int update_skill_value(int skillID, string attribute, float newValue)
 
 
         int exit = 0;
-        exit = sqlite3_open("manki.db", &DB);
+        exit = sqlite3_open("../data/manki.db", &DB);
 
         if(exit){
                 cerr << "Error opening DB " << sqlite3_errmsg(DB) << endl; 
@@ -202,7 +202,7 @@ int update_skill_value(int skillID, string attribute, string newValue)
 
 
         int exit = 0;
-        exit = sqlite3_open("manki.db", &DB);
+        exit = sqlite3_open("../data/manki.db", &DB);
 
         if(exit){
                 cerr << "Error opening DB " << sqlite3_errmsg(DB) << endl; 
