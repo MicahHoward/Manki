@@ -1,24 +1,24 @@
 #include <iostream>
 #include <random>
-using namespace std;
 
-int* generate_addition_problem() 
+std::string* generate_addition_problem() 
 {
         int min = 1;
         int max = 100;
 
-        random_device rd;
-        mt19937 gen(rd());
-        uniform_int_distribution<> distrib(min, max);
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> distrib(min, max);
 
         int first_number = distrib(gen);
         int second_number = distrib(gen);
         int sum = first_number + second_number;
 
-        int* returnValues = new int[3];
-        returnValues[0] = first_number;
-        returnValues[1] = second_number;
-        returnValues[2] = sum;
+        std::string problem = std::to_string(first_number) + " + " + std::to_string(second_number) + " = ?";
+        std::string solution = std::to_string(sum);
+        std::string* returnValue = new std::string[2];
+        returnValue[0] = problem;
+        returnValue[1] = sum;
 
-        return returnValues;
+        return returnValue;
 }

@@ -2,7 +2,7 @@
 #include <random>
 using namespace std;
 
-int* generate_multiplication_problem() 
+string* generate_multiplication_problem() 
 {
         int min = 1;
         int max = 100;
@@ -15,10 +15,9 @@ int* generate_multiplication_problem()
         int second_number = distrib(gen);
         int product = first_number * second_number;
 
-        int* returnValues = new int[3];
-        returnValues[0] = first_number;
-        returnValues[1] = second_number;
-        returnValues[2] = product;
+        string* problem_and_solution = new string[3];
+        problem_and_solution[0] = to_string(first_number) + " * " + to_string(second_number) + " = ?";
+        problem_and_solution[1] = to_string(product);
 
-        return returnValues;
+        return problem_and_solution;
 }

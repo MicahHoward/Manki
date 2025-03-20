@@ -1,2 +1,2 @@
 #pragma once
-int* generate_addition_problem();
+std::string* generate_addition_problem();

@@ -1,2 +1,2 @@
 #pragma once
-int* generate_subtraction_problem();
+std::string* generate_subtraction_problem();

@@ -1,6 +1,10 @@
 #include "MainFrame.h"
+#include "skills/addition.h"
+#include "skills/subtraction.h"
+#include "skills/multiplication.h"
 #include <wx/wx.h>
 #include <wx/simplebook.h>
+#include "backend.h"
 
 static wxSimplebook* main_book;
 wxStaticText* skill_name;
@@ -45,18 +49,22 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
 void MainFrame::OnAdditionButtonClicked(wxCommandEvent& evt) {
         wxLogStatus("Button clicked");
+        std::string* problem_and_solution = generate_addition_problem();
         main_book->SetSelection(1);
-        skill_name->SetLabel("Addition");
+
+        skill_name->SetLabel(problem_and_solution[0]);
 }
 void MainFrame::OnSubtractionButtonClicked(wxCommandEvent& evt) {
         wxLogStatus("Button clicked");
+        std::string* problem_and_solution = generate_subtraction_problem();
         main_book->SetSelection(1);
-        skill_name->SetLabel("Subtraction");
+        skill_name->SetLabel(problem_and_solution[0]);
 }
 void MainFrame::OnMultiplicationButtonClicked(wxCommandEvent& evt) {
         wxLogStatus("Button clicked");
+        std::string* problem_and_solution = generate_multiplication_problem();
         main_book->SetSelection(1);
-        skill_name->SetLabel("Multiplication");
+        skill_name->SetLabel(problem_and_solution[0]);
 }
 void MainFrame::OnTextChanged(wxCommandEvent& evt) {
         wxString str = wxString::Format("Text: %s", evt.GetString());
