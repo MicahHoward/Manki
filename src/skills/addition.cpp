@@ -18,7 +18,7 @@ std::string* generate_addition_problem()
         std::string solution = std::to_string(sum);
         std::string* returnValue = new std::string[2];
         returnValue[0] = problem;
-        returnValue[1] = sum;
+        returnValue[1] = solution;
 
         return returnValue;
 }
