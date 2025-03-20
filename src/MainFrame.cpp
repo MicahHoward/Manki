@@ -3,6 +3,7 @@
 #include <wx/simplebook.h>
 
 static wxSimplebook* main_book;
+wxStaticText* skill_name;
 
 MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL); 
@@ -14,15 +15,16 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         wxButton* subtraction_button = new wxButton(main_panel, wxID_ANY, "Subtraction", wxPoint(150,150), wxSize(100,35));
         wxButton* multiplication_button = new wxButton(main_panel, wxID_ANY, "Multiplication", wxPoint(150,250), wxSize(100,35));
 
-        addition_button->Bind(wxEVT_BUTTON, &MainFrame::OnButtonClicked, this);
-        subtraction_button->Bind(wxEVT_BUTTON, &MainFrame::OnButtonClicked, this);
-        multiplication_button->Bind(wxEVT_BUTTON, &MainFrame::OnButtonClicked, this);
+        addition_button->Bind(wxEVT_BUTTON, &MainFrame::OnAdditionButtonClicked, this);
+        subtraction_button->Bind(wxEVT_BUTTON, &MainFrame::OnSubtractionButtonClicked, this);
+        multiplication_button->Bind(wxEVT_BUTTON, &MainFrame::OnMultiplicationButtonClicked, this);
 
        CreateStatusBar();
 
         main_book->AddPage(main_panel, "Welcome");
 
         wxPanel* skill_panel = new wxPanel(main_book, wxID_ANY);
+        skill_name = new wxStaticText(skill_panel, wxID_ANY, "Addition", wxPoint(350, 150), wxSize(100, 35));
         wxButton* back_button = new wxButton(skill_panel, wxID_ANY, "Back", wxPoint(150, 150), wxSize(100,35));
         wxTextCtrl* textEntry = new wxTextCtrl(skill_panel, wxID_ANY, "", wxPoint(150,350), wxSize(100,35));
         back_button->Bind(wxEVT_BUTTON, &MainFrame::OnBackButtonClicked, this);
@@ -41,9 +43,20 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 }
 
 
-void MainFrame::OnButtonClicked(wxCommandEvent& evt) {
+void MainFrame::OnAdditionButtonClicked(wxCommandEvent& evt) {
         wxLogStatus("Button clicked");
         main_book->SetSelection(1);
+        skill_name->SetLabel("Addition");
+}
+void MainFrame::OnSubtractionButtonClicked(wxCommandEvent& evt) {
+        wxLogStatus("Button clicked");
+        main_book->SetSelection(1);
+        skill_name->SetLabel("Subtraction");
+}
+void MainFrame::OnMultiplicationButtonClicked(wxCommandEvent& evt) {
+        wxLogStatus("Button clicked");
+        main_book->SetSelection(1);
+        skill_name->SetLabel("Multiplication");
 }
 void MainFrame::OnTextChanged(wxCommandEvent& evt) {
         wxString str = wxString::Format("Text: %s", evt.GetString());
