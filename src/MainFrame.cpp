@@ -1,0 +1,55 @@
+#include "MainFrame.h"
+#include <wx/wx.h>
+#include <wx/simplebook.h>
+
+static wxSimplebook* main_book;
+
+MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
+        wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL); 
+        main_book = new wxSimplebook(this, wxID_ANY);
+        main_sizer->Add(main_book, 1, wxEXPAND);
+
+        wxPanel* main_panel = new wxPanel(main_book);
+        wxButton* addition_button = new wxButton(main_panel, wxID_ANY, "Addition", wxPoint(150,50), wxSize(100,35));
+        wxButton* subtraction_button = new wxButton(main_panel, wxID_ANY, "Subtraction", wxPoint(150,150), wxSize(100,35));
+        wxButton* multiplication_button = new wxButton(main_panel, wxID_ANY, "Multiplication", wxPoint(150,250), wxSize(100,35));
+
+        addition_button->Bind(wxEVT_BUTTON, &MainFrame::OnButtonClicked, this);
+        subtraction_button->Bind(wxEVT_BUTTON, &MainFrame::OnButtonClicked, this);
+        multiplication_button->Bind(wxEVT_BUTTON, &MainFrame::OnButtonClicked, this);
+
+       CreateStatusBar();
+
+        main_book->AddPage(main_panel, "Welcome");
+
+        wxPanel* skill_panel = new wxPanel(main_book, wxID_ANY);
+        wxButton* back_button = new wxButton(skill_panel, wxID_ANY, "Back", wxPoint(150, 150), wxSize(100,35));
+        wxTextCtrl* textEntry = new wxTextCtrl(skill_panel, wxID_ANY, "", wxPoint(150,350), wxSize(100,35));
+        back_button->Bind(wxEVT_BUTTON, &MainFrame::OnBackButtonClicked, this);
+        textEntry->Bind(wxEVT_TEXT, &MainFrame::OnTextChanged, this);
+        
+        //image stuff
+        wxStaticBitmap* image;
+        image = new wxStaticBitmap( skill_panel, wxID_ANY, wxBitmap("equation.png", wxBITMAP_TYPE_PNG), wxPoint(50,100), wxSize(100, 500));
+        wxBoxSizer* boxSizer = new wxBoxSizer(wxHORIZONTAL);
+        boxSizer->Add(image, 0, wxCENTER | wxALL, 10);
+        skill_panel->SetSizer(boxSizer);
+
+ 
+
+        main_book->AddPage(skill_panel, "Welcome");
+}
+
+
+void MainFrame::OnButtonClicked(wxCommandEvent& evt) {
+        wxLogStatus("Button clicked");
+        main_book->SetSelection(1);
+}
+void MainFrame::OnTextChanged(wxCommandEvent& evt) {
+        wxString str = wxString::Format("Text: %s", evt.GetString());
+        wxLogStatus(str);
+}
+
+void MainFrame::OnBackButtonClicked(wxCommandEvent& evt) {
+        main_book->SetSelection(0);
+}
