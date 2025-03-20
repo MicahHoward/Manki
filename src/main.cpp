@@ -18,11 +18,9 @@ int latexpp_example()
 	Latex latex;
 
 	const std::string equation = "\\sum_{i=1}^{n} i = \\frac{n(n + 1)}{2}";
-    std::cout << "made it pretty far" << '\n';
 	// Convert to PNG, store in 'equation.png'
 	latex.to_png(equation, "equation.png");
 
-    std::cout << "made it really far" << '\n';
 
 	// Convert to HTML, returns a HTML snippet
 	std::string html = latex.to_html(equation);
