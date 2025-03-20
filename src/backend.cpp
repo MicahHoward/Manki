@@ -116,59 +116,30 @@ std::string timed_input(int timeout_seconds) {
 int practice_skills()
 {
         int skillID;
-        int* problem;
+        std::string* problem_and_solution;
         std::string operand;
         std::cout << "What type of problem would you like?" << std::endl;
         std::cout << "Please enter 1 for addition, 2 for subtraction, or 3 for multiplication." << std::endl;
         std::cin >> skillID;
 
         if(skillID == 1){
-                problem = generate_addition_problem();
-                operand = "+";
+                problem_and_solution = generate_subtraction_problem();
         } else if(skillID == 2){
-                problem = generate_subtraction_problem();
-                operand = "-";
+                problem_and_solution = generate_subtraction_problem();
         } else if(skillID == 3){
-                problem = generate_multiplication_problem();
-                operand = "x";
+                problem_and_solution = generate_multiplication_problem();
         } else{
                 std::cout << "Please enter 1, 2, or 3." << std::endl;
         }
 
-        float problemTime = get_skill_value(skillID, "PROBLEM_TIME");
+        float problem_and_solutionTime = get_skill_value(skillID, "PROBLEM_TIME");
 
-        int firstNumber = problem[0];
-        int secondNumber = problem[1];
-        int solution = problem[2];
+        std::string problem = problem_and_solution[0];
+        int solution = stoi(problem_and_solution[1]);
 
-        std::cout << firstNumber << " " << operand << " " << secondNumber << " = ?" << std::endl;
+        std::cout << problem << '\n';
         std::cin >> user_response;
 
-//        std::stop_source stopSourceProblemTimer;
-//        std::stop_source stopSourceInput;
-//        std::stop_token stopTokenProblemTimer = std::stop_token(stopSourceProblemTimer.get_token());
-//        std::stop_token stopTokenInputTimer = std::stop_token(stopSourceProblemTimer.get_token());
-//        jthread inputThread(user_guess, stopTokenInputTimer);
-//        jthread timerThread(problem_timer, stopTokenProblemTimer, stopSourceInput, problemTime);
-//
-//        inputThread.join();
-//        stopSourceProblemTimer.request_stop();
-
-
-
-//        auto future = async(std::launch::async, []() {
-//                std::string user_guessing;
-//                std::cin >> user_guessing;
-//                return user_guessing;
-//        });
-//        std::chrono::seconds timeout(static_cast<int>(round(problemTime)));
-//        if(future.wait_for(timeout) == future_status::timeout) {
-//                std::cout << "Ran out of time. You shall be executed" << std::endl;
-//        } else {
-//               user_response = future.get(); 
-//        }
-//                        
-//        user_response = timed_input(10);
         std::cout << user_response << std::endl;
 
         int userGuess = -1;
@@ -197,7 +168,7 @@ int practice_skills()
 
 }
 
-int main()
+int old_main()
 {
         bool willContinue = true;
         initialize_database();
