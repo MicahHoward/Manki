@@ -1,7 +1,7 @@
 #pragma once
 #include <stop_token>
 
-int latexpp_example();
+int generate_latex_image(std::string expression);
 int update_fsrs_on_answer(int skillID, int grade);
 int print_skill_info(int skillID);
 void user_guess(std::stop_token stoken);
