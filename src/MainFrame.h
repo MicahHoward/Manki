@@ -11,4 +11,5 @@ class MainFrame : public wxFrame
                 void OnMultiplicationButtonClicked(wxCommandEvent& evt);
                 void OnBackButtonClicked(wxCommandEvent& evt);
                 void OnTextChanged(wxCommandEvent& evt);
+                void OnTextEntered(wxCommandEvent& evt);
 };

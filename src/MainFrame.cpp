@@ -8,6 +8,7 @@
 
 static wxSimplebook* main_book;
 wxStaticText* skill_name;
+std::string solution;
 
 MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL); 
@@ -30,9 +31,10 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         wxPanel* skill_panel = new wxPanel(main_book, wxID_ANY);
         skill_name = new wxStaticText(skill_panel, wxID_ANY, "Addition", wxPoint(350, 150), wxSize(100, 35));
         wxButton* back_button = new wxButton(skill_panel, wxID_ANY, "Back", wxPoint(150, 150), wxSize(100,35));
-        wxTextCtrl* textEntry = new wxTextCtrl(skill_panel, wxID_ANY, "", wxPoint(150,350), wxSize(100,35));
+        wxTextCtrl* textEntry = new wxTextCtrl(skill_panel, wxID_ANY, "", wxPoint(150,350), wxSize(100,35), wxTE_PROCESS_ENTER);
         back_button->Bind(wxEVT_BUTTON, &MainFrame::OnBackButtonClicked, this);
         textEntry->Bind(wxEVT_TEXT, &MainFrame::OnTextChanged, this);
+        textEntry->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnTextEntered, this);
         
         //image stuff
         wxStaticBitmap* image;
@@ -50,25 +52,36 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 void MainFrame::OnAdditionButtonClicked(wxCommandEvent& evt) {
         wxLogStatus("Button clicked");
         std::string* problem_and_solution = generate_addition_problem();
+        skill_name->SetLabel(problem_and_solution[0]);
+        solution = problem_and_solution[1];
         main_book->SetSelection(1);
 
-        skill_name->SetLabel(problem_and_solution[0]);
 }
 void MainFrame::OnSubtractionButtonClicked(wxCommandEvent& evt) {
         wxLogStatus("Button clicked");
         std::string* problem_and_solution = generate_subtraction_problem();
-        main_book->SetSelection(1);
         skill_name->SetLabel(problem_and_solution[0]);
+        solution = problem_and_solution[1];
+        main_book->SetSelection(1);
 }
 void MainFrame::OnMultiplicationButtonClicked(wxCommandEvent& evt) {
         wxLogStatus("Button clicked");
         std::string* problem_and_solution = generate_multiplication_problem();
-        main_book->SetSelection(1);
         skill_name->SetLabel(problem_and_solution[0]);
+        solution = problem_and_solution[1];
+        main_book->SetSelection(1);
 }
 void MainFrame::OnTextChanged(wxCommandEvent& evt) {
         wxString str = wxString::Format("Text: %s", evt.GetString());
         wxLogStatus(str);
+}
+
+void MainFrame::OnTextEntered(wxCommandEvent& evt) {
+        if(evt.GetString() == solution){
+                wxMessageBox(wxT("Correct"));
+        } else{
+                wxMessageBox(wxT("Incorrect, solution was " + solution));
+        }
 }
 
 void MainFrame::OnBackButtonClicked(wxCommandEvent& evt) {
