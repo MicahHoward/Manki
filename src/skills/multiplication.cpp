@@ -16,7 +16,7 @@ string* generate_multiplication_problem()
         int product = first_number * second_number;
 
         string* problem_and_solution = new string[3];
-        problem_and_solution[0] = to_string(first_number) + " * " + to_string(second_number) + " = ?";
+        problem_and_solution[0] = to_string(first_number) + " \\times " + to_string(second_number) + " = ?";
         problem_and_solution[1] = to_string(product);
 
         return problem_and_solution;
