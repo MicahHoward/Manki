@@ -9,6 +9,7 @@
 static wxSimplebook* main_book;
 wxStaticText* skill_name;
 std::string solution;
+wxStaticBitmap* image;
 
 MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL); 
@@ -37,8 +38,7 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         textEntry->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnTextEntered, this);
         
         //image stuff
-        wxStaticBitmap* image;
-        image = new wxStaticBitmap( skill_panel, wxID_ANY, wxBitmap("equation.png", wxBITMAP_TYPE_PNG), wxPoint(50,100), wxSize(100, 500));
+        image = new wxStaticBitmap( skill_panel, wxID_ANY, wxBitmap("problem.png", wxBITMAP_TYPE_PNG), wxPoint(50,100), wxSize(100, 500));
         wxBoxSizer* boxSizer = new wxBoxSizer(wxHORIZONTAL);
         boxSizer->Add(image, 0, wxCENTER | wxALL, 10);
         skill_panel->SetSizer(boxSizer);
@@ -52,6 +52,8 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 void MainFrame::OnAdditionButtonClicked(wxCommandEvent& evt) {
         wxLogStatus("Button clicked");
         std::string* problem_and_solution = generate_addition_problem();
+        generate_latex_image(problem_and_solution[0]);
+        image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
         skill_name->SetLabel(problem_and_solution[0]);
         solution = problem_and_solution[1];
         main_book->SetSelection(1);
@@ -60,6 +62,8 @@ void MainFrame::OnAdditionButtonClicked(wxCommandEvent& evt) {
 void MainFrame::OnSubtractionButtonClicked(wxCommandEvent& evt) {
         wxLogStatus("Button clicked");
         std::string* problem_and_solution = generate_subtraction_problem();
+        generate_latex_image(problem_and_solution[0]);
+        image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
         skill_name->SetLabel(problem_and_solution[0]);
         solution = problem_and_solution[1];
         main_book->SetSelection(1);
@@ -67,6 +71,8 @@ void MainFrame::OnSubtractionButtonClicked(wxCommandEvent& evt) {
 void MainFrame::OnMultiplicationButtonClicked(wxCommandEvent& evt) {
         wxLogStatus("Button clicked");
         std::string* problem_and_solution = generate_multiplication_problem();
+        generate_latex_image(problem_and_solution[0]);
+        image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
         skill_name->SetLabel(problem_and_solution[0]);
         solution = problem_and_solution[1];
         main_book->SetSelection(1);

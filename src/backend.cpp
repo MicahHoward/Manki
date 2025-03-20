@@ -12,18 +12,17 @@
 
 std::string user_response;
 
-int latexpp_example()
+int generate_latex_image(std::string expression)
 {
 	// Single class
 	Latex latex;
 
-	const std::string equation = "\\sum_{i=1}^{n} i = \\frac{n(n + 1)}{2}";
-	// Convert to PNG, store in 'equation.png'
-	latex.to_png(equation, "equation.png");
+	// Convert to PNG, store in 'problem.png'
+	latex.to_png(expression, "problem.png");
 
 
 	// Convert to HTML, returns a HTML snippet
-	std::string html = latex.to_html(equation);
+	std::string html = latex.to_html(expression);
     return 0;
 }
 
@@ -176,7 +175,6 @@ int old_main()
         read_database();
         update_retrievability();
         read_database();
-        latexpp_example();
 
         while(willContinue){
                 int option;
