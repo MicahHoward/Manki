@@ -4,26 +4,47 @@
 #include "skills/multiplication.h"
 #include <wx/wx.h>
 #include <wx/simplebook.h>
+#include <wx/intl.h>
+#include <wx/collpane.h>
 #include "backend.h"
 
 static wxSimplebook* main_book;
+wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
 wxStaticText* skill_name;
 std::string solution;
 wxStaticBitmap* image;
 
 MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
-        wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL); 
+        // Creates
         main_book = new wxSimplebook(this, wxID_ANY);
-        main_sizer->Add(main_book, 1, wxEXPAND);
 
+        //
         wxPanel* main_panel = new wxPanel(main_book);
-        wxButton* addition_button = new wxButton(main_panel, wxID_ANY, "Addition", wxPoint(150,50), wxSize(100,35));
-        wxButton* subtraction_button = new wxButton(main_panel, wxID_ANY, "Subtraction", wxPoint(150,150), wxSize(100,35));
-        wxButton* multiplication_button = new wxButton(main_panel, wxID_ANY, "Multiplication", wxPoint(150,250), wxSize(100,35));
+        wxCollapsiblePane* coll_pane = new wxCollapsiblePane(main_panel, wxID_ANY, "Details:");
+
+        wxWindow* win = coll_pane->GetPane();
+        wxSizer* paneSz = new wxBoxSizer(wxVERTICAL);
+        paneSz->Add(new wxStaticText(win, wxID_ANY, "test!"), 1, wxGROW|wxALL, 2);
+        win->SetSizer(paneSz);
+        paneSz->SetSizeHints(win);
+        main_sizer->Add(coll_pane, 0, wxGROW | wxALL, 5);
+
+        main_panel->SetSizer(main_sizer);
+        
+        main_book->Bind(wxEVT_COLLAPSIBLEPANE_CHANGED, &MainFrame::OnCollapsiblePaneClicked, this);
+
+        main_sizer->Layout();
+
+        wxButton* addition_button = new wxButton(win, wxID_ANY, "Addition", wxPoint(150,50), wxSize(100,35));
+        wxButton* subtraction_button = new wxButton(win, wxID_ANY, "Subtraction", wxPoint(150,150), wxSize(100,35));
+        wxButton* multiplication_button = new wxButton(win, wxID_ANY, "Multiplication", wxPoint(150,250), wxSize(100,35));
 
         addition_button->Bind(wxEVT_BUTTON, &MainFrame::OnAdditionButtonClicked, this);
         subtraction_button->Bind(wxEVT_BUTTON, &MainFrame::OnSubtractionButtonClicked, this);
         multiplication_button->Bind(wxEVT_BUTTON, &MainFrame::OnMultiplicationButtonClicked, this);
+        paneSz->Add(addition_button, 1, wxGROW|wxALL, 2);
+        paneSz->Add(subtraction_button, 1, wxGROW|wxALL, 2);
+        paneSz->Add(multiplication_button, 1, wxGROW|wxALL, 2);
 
        CreateStatusBar();
 
@@ -48,6 +69,9 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         main_book->AddPage(skill_panel, "Welcome");
 }
 
+void MainFrame::OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& event) {
+                main_sizer->Layout();
+}
 
 void MainFrame::OnAdditionButtonClicked(wxCommandEvent& evt) {
         wxLogStatus("Button clicked");
