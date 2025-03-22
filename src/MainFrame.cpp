@@ -7,6 +7,7 @@
 #include <wx/intl.h>
 #include <wx/collpane.h>
 #include "backend.h"
+#include "db.h"
 
 static wxSimplebook* main_book;
 wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
@@ -20,11 +21,10 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
         //
         wxPanel* main_panel = new wxPanel(main_book);
-        wxCollapsiblePane* coll_pane = new wxCollapsiblePane(main_panel, wxID_ANY, "Details:");
+        wxCollapsiblePane* coll_pane = new wxCollapsiblePane(main_panel, wxID_ANY, "Skills:");
 
         wxWindow* win = coll_pane->GetPane();
         wxSizer* paneSz = new wxBoxSizer(wxVERTICAL);
-        paneSz->Add(new wxStaticText(win, wxID_ANY, "test!"), 1, wxGROW|wxALL, 2);
         win->SetSizer(paneSz);
         paneSz->SetSizeHints(win);
         main_sizer->Add(coll_pane, 0, wxGROW | wxALL, 5);
@@ -35,16 +35,17 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
         main_sizer->Layout();
 
-        wxButton* addition_button = new wxButton(win, wxID_ANY, "Addition", wxPoint(150,50), wxSize(100,35));
-        wxButton* subtraction_button = new wxButton(win, wxID_ANY, "Subtraction", wxPoint(150,150), wxSize(100,35));
-        wxButton* multiplication_button = new wxButton(win, wxID_ANY, "Multiplication", wxPoint(150,250), wxSize(100,35));
+        // Creates buttons for each skill
+        int number_of_skills = get_number_of_skills();
+        std::string* skill_names = get_skill_names();
 
-        addition_button->Bind(wxEVT_BUTTON, &MainFrame::OnAdditionButtonClicked, this);
-        subtraction_button->Bind(wxEVT_BUTTON, &MainFrame::OnSubtractionButtonClicked, this);
-        multiplication_button->Bind(wxEVT_BUTTON, &MainFrame::OnMultiplicationButtonClicked, this);
-        paneSz->Add(addition_button, 1, wxGROW|wxALL, 2);
-        paneSz->Add(subtraction_button, 1, wxGROW|wxALL, 2);
-        paneSz->Add(multiplication_button, 1, wxGROW|wxALL, 2);
+        std::cout << skill_names[0] << '\n';
+
+        for(int i = 0; i < number_of_skills; i++){
+                // wx_IDs may not be one or zero, so we use i+2
+                paneSz->Add(new wxButton(win, i + 2, skill_names[i] , wxPoint(150,50), wxSize(100,35)));
+                Connect(i + 2, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
+        }
 
        CreateStatusBar();
 
@@ -73,36 +74,18 @@ void MainFrame::OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& event) {
                 main_sizer->Layout();
 }
 
-void MainFrame::OnAdditionButtonClicked(wxCommandEvent& evt) {
-        wxLogStatus("Button clicked");
-        std::string* problem_and_solution = generate_addition_problem();
-        std::cout << "Made it to image gen \n";
+void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
+        // skillIDs start at 1 and button ids start at 2, so we subtract 1
+        int skillID = evt.GetId() - 1;
+        std::string* problem_and_solution = generate_problem(skillID);
         generate_latex_image(problem_and_solution[0]);
-        std::cout << "Made it past image gen";
         image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
         skill_name->SetLabel(problem_and_solution[0]);
         solution = problem_and_solution[1];
         main_book->SetSelection(1);
 
 }
-void MainFrame::OnSubtractionButtonClicked(wxCommandEvent& evt) {
-        wxLogStatus("Button clicked");
-        std::string* problem_and_solution = generate_subtraction_problem();
-        generate_latex_image("a-b=c");
-        image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
-        skill_name->SetLabel(problem_and_solution[0]);
-        solution = problem_and_solution[1];
-        main_book->SetSelection(1);
-}
-void MainFrame::OnMultiplicationButtonClicked(wxCommandEvent& evt) {
-        wxLogStatus("Button clicked");
-        std::string* problem_and_solution = generate_multiplication_problem();
-        generate_latex_image(problem_and_solution[0]);
-        image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
-        skill_name->SetLabel(problem_and_solution[0]);
-        solution = problem_and_solution[1];
-        main_book->SetSelection(1);
-}
+
 void MainFrame::OnTextChanged(wxCommandEvent& evt) {
         wxString str = wxString::Format("Text: %s", evt.GetString());
         wxLogStatus(str);

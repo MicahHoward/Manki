@@ -168,6 +168,46 @@ float get_skill_value(int skillID, std::string attribute)
         return intermediateVariable;
 }
 
+std::string currentSkillName;
+static int get_skill_name_callback(void* data, int argc, char** argv, char** azColName)
+{
+        currentSkillName= argv[0];
+        return 0;
+}
+
+std::string get_skill_name(int skillID)
+{
+        sqlite3* DB;
+        int exit = 0;
+        exit = sqlite3_open("../data/manki.db", &DB);
+        std::string data("CALLBACK FUNCTION");
+
+        std::string sql("SELECT NAME FROM SKILL WHERE ID = " + std::to_string(skillID) + ";");
+
+        if(exit){
+                std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
+                return "";
+        } 
+
+        exit = sqlite3_exec(DB, sql.c_str(), get_skill_name_callback, (void*)data.c_str(), NULL);
+        if(exit != SQLITE_OK){
+                std::cerr << "Error retrieving skill name!" << std::endl;
+                return "";
+        } 
+  
+        std::string intermediateVariable = currentSkillName;
+        return intermediateVariable;
+}
+
+std::string* get_skill_names(){
+            int number_of_skills = get_number_of_skills();
+            std::string* skill_names = new std::string[number_of_skills];
+            for(int i = 0; i < number_of_skills; i++){
+                    skill_names[i] = get_skill_name(i+1);
+            }
+            return skill_names;
+}
+
 int update_skill_value(int skillID, std::string attribute, float newValue)
 {
         sqlite3* DB;
