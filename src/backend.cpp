@@ -113,6 +113,27 @@ std::string timed_input(int timeout_seconds) {
         }
 }
 
+std::string* generate_problem(int skillID)
+{
+        std::string* problem_and_solution = new std::string[2]; 
+        switch (skillID){
+                case 1:
+                        problem_and_solution = generate_addition_problem();
+                        break;
+                case 2:
+                        problem_and_solution = generate_subtraction_problem();
+                        break;
+                case 3:
+                        problem_and_solution = generate_multiplication_problem();
+                        break;
+                default:
+                        throw std::invalid_argument("generate problem eceived invalid skillID");
+                        break;
+        }
+        return problem_and_solution;
+
+}
+
 
 
 int practice_skills()
