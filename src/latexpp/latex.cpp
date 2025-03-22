@@ -31,7 +31,7 @@ std::string Latex::_katex_path;
 Latex::V8 Latex::_v8;
 
 Latex::Latex(WarningBehavior behavior)
-: Latex("../../katex/katex.min.css", behavior)
+: Latex("../../katex.min.css", behavior)
 { }
 
 Latex::Latex(const std::string& stylesheet, WarningBehavior behavior)
@@ -128,6 +128,7 @@ std::string Latex::to_html(const std::string& latex) const
 	source += _escape(latex) + "', ";
 	source += arguments + ");";
 	
+    std::cout << source << "\n";
 	auto value = _run(source, context);
 
 	std::string html = *v8::String::Utf8Value(_isolate, value);
@@ -138,12 +139,14 @@ std::string Latex::to_html(const std::string& latex) const
 std::string Latex::to_complete_html(const std::string &latex) const
 {
 	auto snippet = to_html(latex);
+    std::cout << "Made it past to_html\n";
 	
 	std::string html = "<!DOCTYPE html>\n<html>\n";
 	
 	html += "<head>\n<meta charset='utf-8'/>\n";
-	html += "<link rel='stylesheet' type='text/css' ";
- 	html += "href='" + _stylesheet + "'>\n";
+	html += "<link rel='stylesheet' href='katex.css' +  >\n";
+    html += "<script src='katex.js'></script>\n";
+
 	
 	if (! _additional_css.empty())
 	{
@@ -166,6 +169,7 @@ void Latex::to_image(const std::string &latex,
 	std::ofstream temp("temp.html");
 	
 	if (! temp) throw FileException("Could not open temporary file!");
+    std::cout << "opened temp file!\n";
 	
 	temp << to_complete_html(latex);
 	
@@ -181,7 +185,7 @@ void Latex::to_image(const std::string &latex,
 	
 	wkhtmltoimage_destroy_converter(converter);
 	
-	boost::filesystem::remove("temp.html");
+	//boost::filesystem::remove("temp.html");
 }
 
 void Latex::to_png(const std::string &latex,
@@ -278,11 +282,13 @@ v8::Local<v8::Value> Latex::_run(const std::string& source,
 	
 	// V8 engine's try-catch mechanism
 	v8::TryCatch try_catch(_isolate);
-	
+
 	auto result = script->Run(context);
 	
 	if (result.IsEmpty())
 	{
+        std::cout << "Result was empty\n";
+
 		// Grab last exception
 		auto exception = try_catch.Exception();
 		
@@ -292,6 +298,7 @@ v8::Local<v8::Value> Latex::_run(const std::string& source,
 		throw ParseException(what.substr(12));
 	}
 	
+    std::cout << "Made it to return\n";
 	// Allows us to return local-scope objects to the outside scope
 	return handle_scope.Escape(result.ToLocalChecked());
 }

@@ -18,7 +18,10 @@ int generate_latex_image(std::string expression)
 	Latex latex;
 
 	// Convert to PNG, store in 'problem.png'
+    std::cout << "made it to to_png\n";
 	latex.to_png(expression, "problem.png");
+
+    std::cout << "made it past to_png\n";
 
 
 	// Convert to HTML, returns a HTML snippet

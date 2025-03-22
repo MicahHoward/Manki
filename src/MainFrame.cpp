@@ -52,7 +52,9 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 void MainFrame::OnAdditionButtonClicked(wxCommandEvent& evt) {
         wxLogStatus("Button clicked");
         std::string* problem_and_solution = generate_addition_problem();
+        std::cout << "Made it to image gen \n";
         generate_latex_image(problem_and_solution[0]);
+        std::cout << "Made it past image gen";
         image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
         skill_name->SetLabel(problem_and_solution[0]);
         solution = problem_and_solution[1];
@@ -62,7 +64,7 @@ void MainFrame::OnAdditionButtonClicked(wxCommandEvent& evt) {
 void MainFrame::OnSubtractionButtonClicked(wxCommandEvent& evt) {
         wxLogStatus("Button clicked");
         std::string* problem_and_solution = generate_subtraction_problem();
-        generate_latex_image(problem_and_solution[0]);
+        generate_latex_image("a-b=c");
         image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
         skill_name->SetLabel(problem_and_solution[0]);
         solution = problem_and_solution[1];
