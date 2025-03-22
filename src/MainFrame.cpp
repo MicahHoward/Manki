@@ -8,6 +8,8 @@
 #include <wx/collpane.h>
 #include "backend.h"
 #include "db.h"
+#include <chrono>
+#include <thread>
 
 static wxSimplebook* main_book;
 wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
@@ -78,7 +80,17 @@ void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
         // skillIDs start at 1 and button ids start at 2, so we subtract 1
         int skillID = evt.GetId() - 1;
         std::string* problem_and_solution = generate_problem(skillID);
-        generate_latex_image(problem_and_solution[0]);
+
+        // TODO: REPLACE THIS GARBAGE BY SWITCHING TO MicroLaTeX OR SOME OTHER LIBRARY
+        int mypid = fork();
+
+        if(0 == mypid){
+                char* args[]={"./latex_generator", problem_and_solution[0].data(), "problem.png", NULL};
+                execvp(args[0], args);
+
+        }
+        // waits for
+        std::this_thread::sleep_for(std::chrono::milliseconds(300));
         image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
         skill_name->SetLabel(problem_and_solution[0]);
         solution = problem_and_solution[1];
