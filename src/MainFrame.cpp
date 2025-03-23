@@ -18,6 +18,7 @@ std::string solution;
 wxStaticBitmap* image;
 wxBoxSizer* boxSizer = new wxBoxSizer(wxVERTICAL);
 int current_skill_id = 0;
+wxTextCtrl* textEntry; 
 
 MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         initialize_database();
@@ -57,14 +58,14 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
                 Connect(2*(i+1), wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
                 Connect(2*(i+1) + 1, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnStatsButtonClicked));
         }
+        coll_pane->Expand();
 
-       CreateStatusBar();
 
         main_book->AddPage(main_panel, "Welcome");
 
         wxPanel* skill_panel = new wxPanel(main_book, wxID_ANY);
         wxButton* back_button = new wxButton(skill_panel, wxID_ANY, "Back", wxPoint(150,50), wxSize(100,35));
-        wxTextCtrl* textEntry = new wxTextCtrl(skill_panel, wxID_ANY, "", wxPoint(150,50), wxSize(100,35), wxTE_PROCESS_ENTER);
+        textEntry = new wxTextCtrl(skill_panel, wxID_ANY, "", wxPoint(150,50), wxSize(100,35), wxTE_PROCESS_ENTER);
         back_button->Bind(wxEVT_BUTTON, &MainFrame::OnBackButtonClicked, this);
         textEntry->Bind(wxEVT_TEXT, &MainFrame::OnTextChanged, this);
         textEntry->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnTextEntered, this);
@@ -115,19 +116,21 @@ void MainFrame::OnStatsButtonClicked(wxCommandEvent& evt) {
 
 void MainFrame::OnTextChanged(wxCommandEvent& evt) {
         wxString str = wxString::Format("Text: %s", evt.GetString());
-        wxLogStatus(str);
 }
 
 void MainFrame::OnTextEntered(wxCommandEvent& evt) {
         if(evt.GetString() == solution){
-                wxMessageBox(wxT("Correct"));
+                wxMessageBox(wxT("The solution was " + solution), "Correct!");
                 update_fsrs_on_answer(current_skill_id, 3);
+                textEntry->Clear();
         } else{
-                wxMessageBox(wxT("Incorrect, solution was " + solution));
+                wxMessageBox(wxT("The solution was " + solution), "Incorrect!");
                 update_fsrs_on_answer(current_skill_id, 1);
+                textEntry->Clear();
         }
 }
 
 void MainFrame::OnBackButtonClicked(wxCommandEvent& evt) {
         main_book->SetSelection(0);
+        textEntry->Clear();
 }
