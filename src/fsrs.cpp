@@ -58,7 +58,9 @@ int update_last_review_time(int skillID, string reviewTime)
 int update_retrievability()
 {
         int numberOfSkills = get_number_of_skills();
-        for(int skillID = 0; skillID < numberOfSkills; skillID++){
+        std::cout << "I think there are " << numberOfSkills << " skills \n"; 
+        for(int skillID = 1; skillID < numberOfSkills + 1; skillID++){
+                std::cout << "Current skill ID = " << skillID << "\n";
                 float time = (get_current_time() - get_skill_value(skillID, "LAST_REVIEW_TIME"))/86400.0;
                 float stability = get_skill_value(skillID, "STABILITY");
                 float newRetrievability =  pow((1 + (19.0/81.0)*(time/stability)),-0.5);
