@@ -13,9 +13,9 @@
 
 static wxSimplebook* main_book;
 wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
-wxStaticText* skill_name;
 std::string solution;
 wxStaticBitmap* image;
+wxBoxSizer* boxSizer = new wxBoxSizer(wxVERTICAL);
 
 MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         // Creates
@@ -23,19 +23,20 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
         //
         wxPanel* main_panel = new wxPanel(main_book);
-        wxCollapsiblePane* coll_pane = new wxCollapsiblePane(main_panel, wxID_ANY, "Skills:");
+        wxCollapsiblePane* coll_pane = new wxCollapsiblePane(main_panel, wxID_ANY, "Skills:", wxDefaultPosition, wxSize(200,200));
+        wxStaticBitmap* logo = new wxStaticBitmap(main_panel, wxID_ANY, wxBitmap(wxImage(wxBitmap("logo.png", wxBITMAP_TYPE_PNG).ConvertToImage()).Scale(200,200)), wxPoint(150,50), wxSize(200, 200));
 
         wxWindow* win = coll_pane->GetPane();
         wxSizer* paneSz = new wxBoxSizer(wxVERTICAL);
         win->SetSizer(paneSz);
         paneSz->SetSizeHints(win);
-        main_sizer->Add(coll_pane, 0, wxGROW | wxALL, 5);
+        main_sizer->Add(logo, wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+        main_sizer->Add(coll_pane, wxGROW | wxALL, 5);
 
         main_panel->SetSizer(main_sizer);
         
         main_book->Bind(wxEVT_COLLAPSIBLEPANE_CHANGED, &MainFrame::OnCollapsiblePaneClicked, this);
 
-        main_sizer->Layout();
 
         // Creates buttons for each skill
         int number_of_skills = get_number_of_skills();
@@ -45,7 +46,7 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
         for(int i = 0; i < number_of_skills; i++){
                 // wx_IDs may not be one or zero, so we use i+2
-                paneSz->Add(new wxButton(win, i + 2, skill_names[i] , wxPoint(150,50), wxSize(100,35)));
+                paneSz->Add(new wxButton(win, i + 2, skill_names[i] , wxPoint(150,50), wxSize(100,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
                 Connect(i + 2, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
         }
 
@@ -54,20 +55,18 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         main_book->AddPage(main_panel, "Welcome");
 
         wxPanel* skill_panel = new wxPanel(main_book, wxID_ANY);
-        skill_name = new wxStaticText(skill_panel, wxID_ANY, "Addition", wxPoint(350, 150), wxSize(100, 35));
-        wxButton* back_button = new wxButton(skill_panel, wxID_ANY, "Back", wxPoint(150, 150), wxSize(100,35));
-        wxTextCtrl* textEntry = new wxTextCtrl(skill_panel, wxID_ANY, "", wxPoint(150,350), wxSize(100,35), wxTE_PROCESS_ENTER);
+        wxButton* back_button = new wxButton(skill_panel, wxID_ANY, "Back", wxPoint(150,50), wxSize(100,35));
+        wxTextCtrl* textEntry = new wxTextCtrl(skill_panel, wxID_ANY, "", wxPoint(150,50), wxSize(100,35), wxTE_PROCESS_ENTER);
         back_button->Bind(wxEVT_BUTTON, &MainFrame::OnBackButtonClicked, this);
         textEntry->Bind(wxEVT_TEXT, &MainFrame::OnTextChanged, this);
         textEntry->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnTextEntered, this);
         
         //image stuff
-        image = new wxStaticBitmap( skill_panel, wxID_ANY, wxBitmap("problem.png", wxBITMAP_TYPE_PNG), wxPoint(50,100), wxSize(100, 500));
-        wxBoxSizer* boxSizer = new wxBoxSizer(wxHORIZONTAL);
+        image = new wxStaticBitmap(skill_panel, wxID_ANY, wxBitmap("problem.png", wxBITMAP_TYPE_PNG), wxPoint(150,50), wxSize(100, 100), wxCENTER);
+        boxSizer->Add(back_button, 0, wxCENTER | wxALL, 10);
         boxSizer->Add(image, 0, wxCENTER | wxALL, 10);
+        boxSizer->Add(textEntry, 0, wxCENTER | wxALL, 10);
         skill_panel->SetSizer(boxSizer);
-
- 
 
         main_book->AddPage(skill_panel, "Welcome");
 }
@@ -92,7 +91,6 @@ void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
         // waits for
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
         image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
-        skill_name->SetLabel(problem_and_solution[0]);
         solution = problem_and_solution[1];
         main_book->SetSelection(1);
 
