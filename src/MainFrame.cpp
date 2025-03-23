@@ -110,8 +110,9 @@ void MainFrame::OnStatsButtonClicked(wxCommandEvent& evt) {
         // skillIDs start at 1 and button ids start at 2, so we subtract 1
         int skillID = ((evt.GetId()-1)/2);
         std::string stats = get_skill_info(skillID);
+        std::string skill_name = get_skill_name(skillID);
 
-        wxMessageBox(stats);
+        wxMessageBox(stats, skill_name + " Stats");
 }
 
 void MainFrame::OnTextChanged(wxCommandEvent& evt) {
