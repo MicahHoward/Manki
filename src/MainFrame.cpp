@@ -25,9 +25,10 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         wxPanel* main_panel = new wxPanel(main_book);
         wxCollapsiblePane* coll_pane = new wxCollapsiblePane(main_panel, wxID_ANY, "Skills:", wxDefaultPosition, wxSize(200,200));
         wxStaticBitmap* logo = new wxStaticBitmap(main_panel, wxID_ANY, wxBitmap(wxImage(wxBitmap("logo.png", wxBITMAP_TYPE_PNG).ConvertToImage()).Scale(200,200)), wxPoint(150,50), wxSize(200, 200));
+        int number_of_skills = get_number_of_skills();
 
         wxWindow* win = coll_pane->GetPane();
-        wxSizer* paneSz = new wxBoxSizer(wxVERTICAL);
+        wxSizer* paneSz = new wxGridSizer(number_of_skills, 2, 0, 0);
         win->SetSizer(paneSz);
         paneSz->SetSizeHints(win);
         main_sizer->Add(logo, wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
@@ -39,15 +40,16 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
 
         // Creates buttons for each skill
-        int number_of_skills = get_number_of_skills();
         std::string* skill_names = get_skill_names();
 
         std::cout << skill_names[0] << '\n';
 
         for(int i = 0; i < number_of_skills; i++){
-                // wx_IDs may not be one or zero, so we use i+2
-                paneSz->Add(new wxButton(win, i + 2, skill_names[i] , wxPoint(150,50), wxSize(100,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
-                Connect(i + 2, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
+                // wx_IDs may not be one or zero, so we use 2i for the skill button and 2i+1 for the stats button
+                paneSz->Add(new wxButton(win, 2*(i+1), skill_names[i] , wxPoint(150,50), wxSize(100,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                paneSz->Add(new wxButton(win, 2*(i+1) + 1, "Stats", wxPoint(150,50), wxSize(100,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                Connect(2*(i+1), wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
+                Connect(2*(i+1) + 1, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnStatsButtonClicked));
         }
 
        CreateStatusBar();
@@ -77,7 +79,7 @@ void MainFrame::OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& event) {
 
 void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
         // skillIDs start at 1 and button ids start at 2, so we subtract 1
-        int skillID = evt.GetId() - 1;
+        int skillID = (evt.GetId()/2);
         std::string* problem_and_solution = generate_problem(skillID);
 
         // TODO: REPLACE THIS GARBAGE BY SWITCHING TO MicroLaTeX OR SOME OTHER LIBRARY
@@ -94,6 +96,14 @@ void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
         solution = problem_and_solution[1];
         main_book->SetSelection(1);
 
+}
+
+void MainFrame::OnStatsButtonClicked(wxCommandEvent& evt) {
+        // skillIDs start at 1 and button ids start at 2, so we subtract 1
+        int skillID = ((evt.GetId()-1)/2);
+        std::string stats = get_skill_info(skillID);
+
+        wxMessageBox(stats);
 }
 
 void MainFrame::OnTextChanged(wxCommandEvent& evt) {
