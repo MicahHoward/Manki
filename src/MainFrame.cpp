@@ -8,6 +8,7 @@
 #include <wx/collpane.h>
 #include "backend.h"
 #include "db.h"
+#include "fsrs.h"
 #include <chrono>
 #include <thread>
 
@@ -19,6 +20,10 @@ wxBoxSizer* boxSizer = new wxBoxSizer(wxVERTICAL);
 int current_skill_id = 0;
 
 MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
+        initialize_database();
+        insert_default_values();
+        update_retrievability();
+
         // Creates
         main_book = new wxSimplebook(this, wxID_ANY);
 

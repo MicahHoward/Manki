@@ -14,7 +14,7 @@ static int callback(void* data, int argc, char** argv, char** azColName)
         return 0;
 }
 
-int numberOfSkills;
+int numberOfSkills = 0;
 static int get_number_of_skills_callback(void* data, int argc, char** argv, char** azColName)
 {
         numberOfSkills++;
@@ -38,9 +38,10 @@ int initialize_database()
         if(exit){
                 std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
                 return -1;
-        } else{
-                std::cout << "DB opened successfully!" << std::endl;
-        }
+        } 
+        //else{
+        //       std::cout << "DB opened successfully!" << std::endl;
+        //}
         
         char* messageError;
         sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);  
@@ -48,9 +49,10 @@ int initialize_database()
         if(exit != SQLITE_OK){
                 std::cerr << "Error creating table!" << std::endl;
                 sqlite3_free(messageError);
-        } else{
-                std::cout << "Table created succesfully!" << std::endl;
-        }
+        } 
+        //else{
+        //        std::cout << "Table created succesfully!" << std::endl;
+        //}
 
         sqlite3_close(DB);
         return 0;
@@ -71,9 +73,10 @@ int insert_default_values()
         if(exit){
                 std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
                 return -1;
-        } else{
-                std::cout << "DB opened successfully!" << std::endl;
-        }
+        } 
+        //else{
+        //        std::cout << "DB opened successfully!" << std::endl;
+        //}
 
         exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
         if(exit != SQLITE_OK){
@@ -113,6 +116,9 @@ int read_database()
 
 int get_number_of_skills()
 {
+        if(numberOfSkills != 0){
+                return numberOfSkills;
+        }
         sqlite3* DB;
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);
@@ -123,17 +129,19 @@ int get_number_of_skills()
         if(exit){
                 std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
                 return -1;
-        } else{
-                std::cout << "DB opened successfully!" << std::endl;
-        }
+        } 
+        //else{
+         //       std::cout << "DB opened successfully!" << std::endl;
+        //}
 
         exit = sqlite3_exec(DB, sql.c_str(), get_number_of_skills_callback, (void*)data.c_str(), NULL);
         if(exit != SQLITE_OK){
                 std::cerr << "Error selecting!" << std::endl;
                 return -1;
-        } else{
-                std::cout << "Selection completed!" << std::endl;
-        }
+        } 
+        //else{
+         //       std::cout << "Selection completed!" << std::endl;
+        //}
         return numberOfSkills;
 }
 
@@ -221,9 +229,10 @@ int update_skill_value(int skillID, std::string attribute, float newValue)
         if(exit){
                 std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
                 return -1;
-        } else{
-                std::cout << "DB opened successfully!" << std::endl;
-        }
+        } 
+        //else{
+        //       std::cout << "DB opened successfully!" << std::endl;
+        //}
 
         exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
         if(exit != SQLITE_OK){
