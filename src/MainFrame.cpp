@@ -16,6 +16,7 @@ wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
 std::string solution;
 wxStaticBitmap* image;
 wxBoxSizer* boxSizer = new wxBoxSizer(wxVERTICAL);
+int current_skill_id = 0;
 
 MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         // Creates
@@ -94,6 +95,7 @@ void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
         image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
         solution = problem_and_solution[1];
+        current_skill_id = skillID;
         main_book->SetSelection(1);
 
 }
@@ -114,8 +116,10 @@ void MainFrame::OnTextChanged(wxCommandEvent& evt) {
 void MainFrame::OnTextEntered(wxCommandEvent& evt) {
         if(evt.GetString() == solution){
                 wxMessageBox(wxT("Correct"));
+                update_fsrs_on_answer(current_skill_id, 3);
         } else{
                 wxMessageBox(wxT("Incorrect, solution was " + solution));
+                update_fsrs_on_answer(current_skill_id, 1);
         }
 }
 
