@@ -76,6 +76,19 @@ int print_skill_info(int skillID){
         return 0;
 }
 
+std::string get_skill_info(int skillID){
+        float currentStability = get_skill_value(skillID, "STABILITY");
+        float currentDifficulty = get_skill_value(skillID, "DIFFICULTY");
+        float currentRetrievability = get_skill_value(skillID, "RETRIEVABILITY");
+        float currentLastReviewTime = get_skill_value(skillID, "LAST_REVIEW_TIME");
+        std::string skill_info = "For skillID " + std::to_string(skillID) + ":\n"; 
+        skill_info = skill_info + "Current stability = " + std::to_string(currentStability) + "\n";
+        skill_info = skill_info + "Current difficulty = " + std::to_string(currentDifficulty) + "\n";
+        skill_info = skill_info + "Current retrievability = " + std::to_string(currentRetrievability) + "\n";
+        skill_info = skill_info + "Current last review time = " + std::to_string(currentLastReviewTime) + "\n";
+        return skill_info;
+}
+
 void user_guess(std::stop_token stoken){
         std::stop_callback callBack (stoken, [] {
                 user_response = "Ran out of time!";                    
