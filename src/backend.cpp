@@ -62,6 +62,20 @@ int update_fsrs_on_answer(int skillID, int grade)
         return 0;
 }
 
+
+int get_skill_status(int skillID){
+        float currentRetrievability = get_skill_value(skillID, "RETRIEVABILITY");
+        if(currentRetrievability >= 0.90){
+                // The int get_skill_status returns indicates which collapsible pane the skill should be in.
+                // 0 for due, 1 for not due, 2 for not learnt
+                return 1;
+        } else if(currentRetrievability == -1){
+                return 2;
+        } else{
+                return 0;
+        }
+}
+
 int print_skill_info(int skillID){
         std::cout << std::endl << "print_skill_info section" << std::endl;
         float currentStability = get_skill_value(skillID, "STABILITY");
