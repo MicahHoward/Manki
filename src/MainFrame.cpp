@@ -1,8 +1,4 @@
 #include "MainFrame.h"
-#include "skills/addition.h"
-#include "skills/subtraction.h"
-#include "skills/multiplication.h"
-#include "skills/power_rule.h"
 #include <wx/wx.h>
 #include <wx/simplebook.h>
 #include <wx/intl.h>
