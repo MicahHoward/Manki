@@ -1,21 +1,31 @@
 #include <iostream>
 #include <random>
+#include <complex>
+#include <math.h>
 
-std::string* generate_addition_problem() 
+std::string* generate_quadratic_formula_problem() 
 {
         int min = 1;
-        int max = 100;
+        int max = 10;
 
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<> distrib(min, max);
 
-        int first_number = distrib(gen);
-        int second_number = distrib(gen);
-        int sum = first_number + second_number;
+        int a = distrib(gen);
+        int b = distrib(gen);
+        int c = distrib(gen);
+        std::complex<double> xone = (std::complex<double>(-b, 0) + std::sqrt(std::complex<double>(pow(b, 2) - (4*a*c), 0)))/std::complex<double>((2*a),0); 
+        std::complex<double> xtwo = (std::complex<double>(-b, 0) - std::sqrt(std::complex<double>(pow(b, 2) - (4*a*c), 0)))/std::complex<double>((2*a),0); 
 
-        std::string problem = std::to_string(first_number) + " + " + std::to_string(second_number) + " = ?";
-        std::string solution = std::to_string(sum);
+        std::complex<double> annoying_part = std::sqrt(std::complex<double>(b^2 - (4*a*c), 0));
+        std::cout << std::to_string(annoying_part.real()) + " + " + std::to_string(annoying_part.imag()) + "i \n";
+        std::cout << std::to_string(b^2) + "\n";
+        std::cout << std::to_string((4*a*c)) + "\n";
+        std::cout << std::to_string(b^2 - (4*a*c)) + "\n";
+
+        std::string problem = std::to_string(a) + "x^2 + " + std::to_string(b) + "x + " + std::to_string(c) + " = 0";
+        std::string solution = std::to_string(xone.real()) + " + " + std::to_string(xone.imag()) + "i, " + std::to_string(xtwo.real()) + " + " + std::to_string(xtwo.imag()) + "i, ";
         std::string* returnValue = new std::string[2];
         returnValue[0] = problem;
         returnValue[1] = solution;

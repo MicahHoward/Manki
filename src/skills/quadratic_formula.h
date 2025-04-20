@@ -1,2 +1,2 @@
 #pragma once
-std::string* generate_addition_problem();
+std::string* generate_quadratic_formula_problem();

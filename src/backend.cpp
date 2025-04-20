@@ -10,6 +10,7 @@
 #include "skills/fraction_addition.h"
 #include "skills/two_by_two_det.h"
 #include "skills/three_by_three_det.h"
+#include "skills/quadratic_formula.h"
 #include "db.h"
 #include "fsrs.h"
 #include "latexpp/latex.hpp"
@@ -169,6 +170,10 @@ std::string* generate_problem(int skillID)
                 case 7:
                         problem_and_solution = generate_three_by_three_det_problem();
                         break;
+                case 8:
+                        problem_and_solution = generate_quadratic_formula_problem();
+                        break;
+
 
                 default:
                         throw std::invalid_argument("generate problem eceived invalid skillID");
