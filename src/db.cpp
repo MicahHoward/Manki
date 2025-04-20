@@ -64,8 +64,9 @@ int insert_default_values()
         char* messageError;
         std::string sql("INSERT INTO SKILL VALUES(1, 'Addition', -1, -1, -1, -1, 10);"
                    "INSERT INTO SKILL VALUES(2, 'Subtraction', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(3, 'Multiplication', -1, -1, -1, -1, 10);");
-
+                   "INSERT INTO SKILL VALUES(3, 'Multiplication', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(4, 'Power Rule', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(5, 'Fraction Addition', -1, -1, -1, -1, 10);");
 
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);
@@ -83,7 +84,7 @@ int insert_default_values()
                 std::cerr << "Error inserting to table!" << std::endl;
                 sqlite3_free(messageError);
         } else{
-                std::cout << "Insertion completed!" << std::endl;
+                std::cout << "Insertion has done completed!" << std::endl;
         }
         return 0;
 }

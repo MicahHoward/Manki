@@ -6,6 +6,8 @@
 #include "skills/addition.h"
 #include "skills/subtraction.h"
 #include "skills/multiplication.h"
+#include "skills/power_rule.h"
+#include "skills/fraction_addition.h"
 #include "db.h"
 #include "fsrs.h"
 #include "latexpp/latex.hpp"
@@ -152,6 +154,12 @@ std::string* generate_problem(int skillID)
                         break;
                 case 3:
                         problem_and_solution = generate_multiplication_problem();
+                        break;
+                case 4:
+                        problem_and_solution = generate_power_rule_problem();
+                        break;
+                case 5:
+                        problem_and_solution = generate_fraction_addition_problem();
                         break;
                 default:
                         throw std::invalid_argument("generate problem eceived invalid skillID");

@@ -2,6 +2,7 @@
 #include "skills/addition.h"
 #include "skills/subtraction.h"
 #include "skills/multiplication.h"
+#include "skills/power_rule.h"
 #include <wx/wx.h>
 #include <wx/simplebook.h>
 #include <wx/intl.h>
@@ -137,7 +138,7 @@ void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
 
         }
         // waits for
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
         solution = problem_and_solution[1];
         current_skill_id = skillID;
