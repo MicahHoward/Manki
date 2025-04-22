@@ -64,8 +64,24 @@ int insert_default_values()
         char* messageError;
         std::string sql("INSERT INTO SKILL VALUES(1, 'Addition', -1, -1, -1, -1, 10);"
                    "INSERT INTO SKILL VALUES(2, 'Subtraction', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(3, 'Multiplication', -1, -1, -1, -1, 10);");
-
+                   "INSERT INTO SKILL VALUES(3, 'Multiplication', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(4, 'Power Rule', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(5, 'Fraction Addition', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(6, '2x2 Matrix Determinants', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(7, '3x3 Matrix Determinants', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(8, 'Quadratic Formula', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(9, 'Product Rule', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(10, 'Sin Values', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(11, 'Cos Values', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(12, 'Tan Values', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(13, '2x2 Matrix Multiplication', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(14, 'Matrix Vector Multiplication', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(15, 'Triangle Area', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(16, 'Circle Area', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(17, 'Integration Power Rule', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(18, 'Derivatives of Trigonometric Functions', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(19, 'Pythagorean Theorem', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(20, 'Partial Derivatives', -1, -1, -1, -1, 10);");
 
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);
@@ -83,7 +99,7 @@ int insert_default_values()
                 std::cerr << "Error inserting to table!" << std::endl;
                 sqlite3_free(messageError);
         } else{
-                std::cout << "Insertion completed!" << std::endl;
+                std::cout << "Insertion has done completed!" << std::endl;
         }
         return 0;
 }

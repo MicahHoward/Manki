@@ -1,7 +1,4 @@
 #include "MainFrame.h"
-#include "skills/addition.h"
-#include "skills/subtraction.h"
-#include "skills/multiplication.h"
 #include <wx/wx.h>
 #include <wx/simplebook.h>
 #include <wx/intl.h>
@@ -20,6 +17,12 @@ wxStaticBitmap* image;
 wxBoxSizer* boxSizer = new wxBoxSizer(wxVERTICAL);
 int current_skill_id = 0;
 wxTextCtrl* textEntry; 
+wxCollapsiblePane* due_coll_pane; 
+wxCollapsiblePane* learnt_coll_pane; 
+wxCollapsiblePane* unlearnt_coll_pane; 
+int due_coll_pane_height;
+int learnt_coll_pane_height;
+int unlearnt_coll_pane_height;
 
 MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         initialize_database();
@@ -31,9 +34,12 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
         //
         wxPanel* main_panel = new wxPanel(main_book);
-        wxCollapsiblePane* due_coll_pane = new wxCollapsiblePane(main_panel, wxID_ANY, "Due Skills:", wxDefaultPosition, wxSize(200,200));
-        wxCollapsiblePane* learnt_coll_pane = new wxCollapsiblePane(main_panel, wxID_ANY, "Learnt Skills:", wxDefaultPosition, wxSize(200,200));
-        wxCollapsiblePane* unlearnt_coll_pane = new wxCollapsiblePane(main_panel, wxID_ANY, "Unlearnt Skills:", wxDefaultPosition, wxSize(200,200));
+        due_coll_pane_height = 200;
+        learnt_coll_pane_height = 200;
+        unlearnt_coll_pane_height = 200;
+        due_coll_pane = new wxCollapsiblePane(main_panel, 200, "Due Skills:", wxDefaultPosition, wxSize(400, 50));
+        learnt_coll_pane = new wxCollapsiblePane(main_panel, 201, "Learnt Skills:", wxDefaultPosition, wxSize(400, 50));
+        unlearnt_coll_pane = new wxCollapsiblePane(main_panel, 202, "Unlearnt Skills:", wxDefaultPosition, wxSize(400, 50));
         wxStaticBitmap* logo = new wxStaticBitmap(main_panel, wxID_ANY, wxBitmap(wxImage(wxBitmap("logo.png", wxBITMAP_TYPE_PNG).ConvertToImage()).Scale(200,200)), wxPoint(150,50), wxSize(200, 200));
         int number_of_skills = get_number_of_skills();
 
@@ -78,17 +84,23 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
                 switch(skill_status[i])
                 {
                         case 0:
-                                dueSz->Add(new wxButton(due_win, 2*(i+1), skill_names[i] , wxPoint(150,50), wxSize(100,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
-                                dueSz->Add(new wxButton(due_win, 2*(i+1) + 1, "Stats", wxPoint(150,50), wxSize(100,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                due_coll_pane_height += 35;
+                                dueSz->Add(new wxButton(due_win, 2*(i+1), skill_names[i] , wxPoint(150, due_coll_pane_height - 200), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                dueSz->Add(new wxButton(due_win, 2*(i+1) + 1, "Stats", wxPoint(150, due_coll_pane_height - 200), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                due_win->Fit();
+                                due_coll_pane->SetMinSize(wxSize(400,due_coll_pane_height));
+                                dueSz->Layout();
                                 break;
                         case 1:
                                 std::cout << "Adding to learnt win\n";
-                                learntSz->Add(new wxButton(learnt_win, 2*(i+1), skill_names[i] , wxPoint(150,50), wxSize(100,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
-                                learntSz->Add(new wxButton(learnt_win, 2*(i+1) + 1, "Stats", wxPoint(150,50), wxSize(100,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                learnt_coll_pane_height += 35;
+                                learntSz->Add(new wxButton(learnt_win, 2*(i+1), skill_names[i] , wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                learntSz->Add(new wxButton(learnt_win, 2*(i+1) + 1, "Stats", wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
                                 break;
                         case 2:
-                                unlearntSz->Add(new wxButton(unlearnt_win, 2*(i+1), skill_names[i] , wxPoint(150,50), wxSize(100,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
-                                unlearntSz->Add(new wxButton(unlearnt_win, 2*(i+1) + 1, "Stats", wxPoint(150,50), wxSize(100,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                unlearnt_coll_pane_height += 35;
+                                unlearntSz->Add(new wxButton(unlearnt_win, 2*(i+1), skill_names[i] , wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                unlearntSz->Add(new wxButton(unlearnt_win, 2*(i+1) + 1, "Stats", wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
                                 break;
                         default:
                                 throw std::invalid_argument("Invalid skill status");
@@ -104,13 +116,13 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
         wxPanel* skill_panel = new wxPanel(main_book, wxID_ANY);
         wxButton* back_button = new wxButton(skill_panel, wxID_ANY, "Back", wxPoint(150,50), wxSize(100,35));
-        textEntry = new wxTextCtrl(skill_panel, wxID_ANY, "", wxPoint(150,50), wxSize(100,35), wxTE_PROCESS_ENTER);
+        textEntry = new wxTextCtrl(skill_panel, wxID_ANY, "", wxPoint(150,50), wxSize(400,35), wxTE_PROCESS_ENTER);
         back_button->Bind(wxEVT_BUTTON, &MainFrame::OnBackButtonClicked, this);
         textEntry->Bind(wxEVT_TEXT, &MainFrame::OnTextChanged, this);
         textEntry->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnTextEntered, this);
         
         //image stuff
-        image = new wxStaticBitmap(skill_panel, wxID_ANY, wxBitmap("problem.png", wxBITMAP_TYPE_PNG), wxPoint(150,50), wxSize(100, 100), wxCENTER);
+        image = new wxStaticBitmap(skill_panel, wxID_ANY, wxBitmap("problem.png", wxBITMAP_TYPE_PNG), wxPoint(150,50), wxSize(400, 100), wxCENTER);
         boxSizer->Add(back_button, 0, wxCENTER | wxALL, 10);
         boxSizer->Add(image, 0, wxCENTER | wxALL, 10);
         boxSizer->Add(textEntry, 0, wxCENTER | wxALL, 10);
@@ -119,7 +131,35 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         main_book->AddPage(skill_panel, "Welcome");
 }
 
-void MainFrame::OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& event) {
+void MainFrame::OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& evt) {
+                
+                main_sizer->Layout();
+                int adjusted_pane_id = evt.GetId();
+                int adjusted_pane_height;
+                wxCollapsiblePane* adjusted_pane; 
+
+                switch(adjusted_pane_id){
+                        case 200:
+                                adjusted_pane = due_coll_pane;
+                                adjusted_pane_height = due_coll_pane_height;
+                                break;
+                        case 201:
+                                adjusted_pane = learnt_coll_pane;
+                                adjusted_pane_height = learnt_coll_pane_height;
+                                break;
+                        case 202:
+                                adjusted_pane = unlearnt_coll_pane;
+                                adjusted_pane_height = unlearnt_coll_pane_height;
+                                break;
+                }
+
+                // std::cout << std::to_string(adjusted_pane_height) + "\n";
+
+                if(adjusted_pane->IsCollapsed() == true){
+                        adjusted_pane->SetMinSize(wxSize(400, 50));
+                } else{
+                        adjusted_pane->SetMinSize(wxSize(400, due_coll_pane_height));
+                }
                 main_sizer->Layout();
 }
 
@@ -137,7 +177,7 @@ void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
 
         }
         // waits for
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
         image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
         solution = problem_and_solution[1];
         current_skill_id = skillID;

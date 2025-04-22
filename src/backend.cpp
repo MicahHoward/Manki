@@ -6,6 +6,23 @@
 #include "skills/addition.h"
 #include "skills/subtraction.h"
 #include "skills/multiplication.h"
+#include "skills/power_rule.h"
+#include "skills/fraction_addition.h"
+#include "skills/two_by_two_det.h"
+#include "skills/three_by_three_det.h"
+#include "skills/quadratic_formula.h"
+#include "skills/product_rule.h"
+#include "skills/sin_values.h"
+#include "skills/cos_values.h"
+#include "skills/tan_values.h"
+#include "skills/two_by_two_matrix_multiplication.h"
+#include "skills/matrix_vector_multiplication.h"
+#include "skills/triangle_area.h"
+#include "skills/circle_area.h"
+#include "skills/integration_power_rule.h"
+#include "skills/trig_deriv.h"
+#include "skills/pythagorean_theorem.h"
+#include "skills/partial_derivatives.h"
 #include "db.h"
 #include "fsrs.h"
 #include "latexpp/latex.hpp"
@@ -153,8 +170,60 @@ std::string* generate_problem(int skillID)
                 case 3:
                         problem_and_solution = generate_multiplication_problem();
                         break;
+                case 4:
+                        problem_and_solution = generate_power_rule_problem();
+                        break;
+                case 5:
+                        problem_and_solution = generate_fraction_addition_problem();
+                        break;
+                case 6:
+                        problem_and_solution = generate_two_by_two_det_problem();
+                        break;
+                case 7:
+                        problem_and_solution = generate_three_by_three_det_problem();
+                        break;
+                case 8:
+                        problem_and_solution = generate_quadratic_formula_problem();
+                        break;
+                case 9:
+                        problem_and_solution = generate_product_rule_problem();
+                        break;
+                case 10:
+                        problem_and_solution = generate_sin_values_problem();
+                        break;
+                case 11:
+                        problem_and_solution = generate_cos_values_problem();
+                        break;
+                case 12:
+                        problem_and_solution = generate_tan_values_problem();
+                        break;
+                case 13:
+                        problem_and_solution = generate_two_by_two_matrix_multiplication_problem();
+                        break;
+                case 14:
+                        problem_and_solution = generate_matrix_vector_multiplication_problem();
+                        break;
+                case 15:
+                        problem_and_solution = generate_triangle_area_problem();
+                        break;
+                case 16:
+                        problem_and_solution = generate_circle_area_problem();
+                        break;
+                case 17:
+                        problem_and_solution = generate_integration_power_rule_problem();
+                        break;
+                case 18:
+                        problem_and_solution = generate_trig_deriv_problem();
+                        break;
+                case 19:
+                        problem_and_solution = generate_pythagorean_theorem_problem();
+                        break;
+                case 20:
+                        problem_and_solution = generate_partial_derivatives_problem();
+                        break;
+
                 default:
-                        throw std::invalid_argument("generate problem eceived invalid skillID");
+                        throw std::invalid_argument("generate problem received invalid skillID");
                         break;
         }
         return problem_and_solution;

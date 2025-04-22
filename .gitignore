@@ -2,5 +2,5 @@
 *.db
 #ignore src/test
 src/test
-*.png
-*.html
+src/problem.png
+temp.html
