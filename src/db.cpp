@@ -78,7 +78,10 @@ int insert_default_values()
                    "INSERT INTO SKILL VALUES(14, 'Matrix Vector Multiplication', -1, -1, -1, -1, 10);"
                    "INSERT INTO SKILL VALUES(15, 'Triangle Area', -1, -1, -1, -1, 10);"
                    "INSERT INTO SKILL VALUES(16, 'Circle Area', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(17, 'Integration Power Rule', -1, -1, -1, -1, 10);");
+                   "INSERT INTO SKILL VALUES(17, 'Integration Power Rule', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(18, 'Derivatives of Trigonometric Functions', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(19, 'Pythagorean Theorem', -1, -1, -1, -1, 10);"
+                   "INSERT INTO SKILL VALUES(20, 'Partial Derivatives', -1, -1, -1, -1, 10);");
 
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);

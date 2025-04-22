@@ -20,6 +20,9 @@
 #include "skills/triangle_area.h"
 #include "skills/circle_area.h"
 #include "skills/integration_power_rule.h"
+#include "skills/trig_deriv.h"
+#include "skills/pythagorean_theorem.h"
+#include "skills/partial_derivatives.h"
 #include "db.h"
 #include "fsrs.h"
 #include "latexpp/latex.hpp"
@@ -209,6 +212,16 @@ std::string* generate_problem(int skillID)
                 case 17:
                         problem_and_solution = generate_integration_power_rule_problem();
                         break;
+                case 18:
+                        problem_and_solution = generate_trig_deriv_problem();
+                        break;
+                case 19:
+                        problem_and_solution = generate_pythagorean_theorem_problem();
+                        break;
+                case 20:
+                        problem_and_solution = generate_partial_derivatives_problem();
+                        break;
+
                 default:
                         throw std::invalid_argument("generate problem received invalid skillID");
                         break;
