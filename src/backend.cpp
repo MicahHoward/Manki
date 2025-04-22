@@ -11,6 +11,11 @@
 #include "skills/two_by_two_det.h"
 #include "skills/three_by_three_det.h"
 #include "skills/quadratic_formula.h"
+#include "skills/product_rule.h"
+#include "skills/sin_values.h"
+#include "skills/cos_values.h"
+#include "skills/tan_values.h"
+#include "skills/two_by_two_matrix_multiplication.h"
 #include "db.h"
 #include "fsrs.h"
 #include "latexpp/latex.hpp"
@@ -173,8 +178,22 @@ std::string* generate_problem(int skillID)
                 case 8:
                         problem_and_solution = generate_quadratic_formula_problem();
                         break;
-
-
+                case 9:
+                        problem_and_solution = generate_product_rule_problem();
+                        break;
+                case 10:
+                        problem_and_solution = generate_sin_values_problem();
+                        break;
+                case 11:
+                        problem_and_solution = generate_cos_values_problem();
+                        break;
+                case 12:
+                        problem_and_solution = generate_tan_values_problem();
+                        break;
+                case 13:
+                        problem_and_solution = generate_two_by_two_matrix_multiplication_problem();
+                        break;
+              
                 default:
                         throw std::invalid_argument("generate problem eceived invalid skillID");
                         break;

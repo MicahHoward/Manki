@@ -1,21 +1,39 @@
 #include <iostream>
 #include <random>
 
-std::string* generate_addition_problem() 
+std::string* generate_product_rule_problem() 
 {
         int min = 1;
-        int max = 100;
+        int max = 10;
 
         std::random_device rd;
         std::mt19937 gen(rd());
         std::uniform_int_distribution<> distrib(min, max);
 
-        int first_number = distrib(gen);
-        int second_number = distrib(gen);
-        int sum = first_number + second_number;
+        int first_power = distrib(gen);
+        int first_coefficient = distrib(gen);
+        int second_power = distrib(gen);
+        int second_coefficient = distrib(gen);
 
-        std::string problem = std::to_string(first_number) + " + " + std::to_string(second_number) + " = ?";
-        std::string solution = std::to_string(sum);
+        int first_derivative_coefficient = first_power * first_coefficient;
+        int first_derivative_power = first_power - 1;
+        int second_derivative_coefficient = second_power * second_coefficient;
+        int second_derivative_power = second_power - 1;
+
+        int first_half_of_product_coefficient = first_derivative_coefficient * second_coefficient; 
+        int first_half_of_product_power = first_derivative_power + second_power; 
+        int second_half_of_product_coefficient = second_derivative_coefficient * first_coefficient; 
+        int second_half_of_product_power = second_derivative_power + first_power;
+        std::string solution = "";
+
+        if(first_half_of_product_power == second_half_of_product_power){
+                solution = std::to_string(first_half_of_product_coefficient + second_half_of_product_coefficient) + "x^" + std::to_string(first_half_of_product_power);
+        } else{
+                solution = std::to_string(first_half_of_product_coefficient) + "x^" + std::to_string(first_half_of_product_power) + " + " + 
+                        std::to_string(second_half_of_product_coefficient) + "x^" + std::to_string(second_half_of_product_power);
+        }
+        std::string problem = std::to_string(first_coefficient) + "x^{" + std::to_string(first_power) + "}\\times" + std::to_string(second_coefficient) + "x^{" + std::to_string(second_power) + "}";
+
         std::string* returnValue = new std::string[2];
         returnValue[0] = problem;
         returnValue[1] = solution;
