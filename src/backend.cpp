@@ -16,6 +16,7 @@
 #include "skills/cos_values.h"
 #include "skills/tan_values.h"
 #include "skills/two_by_two_matrix_multiplication.h"
+#include "skills/matrix_vector_multiplication.h"
 #include "db.h"
 #include "fsrs.h"
 #include "latexpp/latex.hpp"
@@ -193,7 +194,9 @@ std::string* generate_problem(int skillID)
                 case 13:
                         problem_and_solution = generate_two_by_two_matrix_multiplication_problem();
                         break;
-              
+                case 14:
+                        problem_and_solution = generate_matrix_vector_multiplication_problem();
+                        break;
                 default:
                         throw std::invalid_argument("generate problem eceived invalid skillID");
                         break;
