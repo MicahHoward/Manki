@@ -17,6 +17,9 @@
 #include "skills/tan_values.h"
 #include "skills/two_by_two_matrix_multiplication.h"
 #include "skills/matrix_vector_multiplication.h"
+#include "skills/triangle_area.h"
+#include "skills/circle_area.h"
+#include "skills/integration_power_rule.h"
 #include "db.h"
 #include "fsrs.h"
 #include "latexpp/latex.hpp"
@@ -197,8 +200,17 @@ std::string* generate_problem(int skillID)
                 case 14:
                         problem_and_solution = generate_matrix_vector_multiplication_problem();
                         break;
+                case 15:
+                        problem_and_solution = generate_triangle_area_problem();
+                        break;
+                case 16:
+                        problem_and_solution = generate_circle_area_problem();
+                        break;
+                case 17:
+                        problem_and_solution = generate_integration_power_rule_problem();
+                        break;
                 default:
-                        throw std::invalid_argument("generate problem eceived invalid skillID");
+                        throw std::invalid_argument("generate problem received invalid skillID");
                         break;
         }
         return problem_and_solution;
