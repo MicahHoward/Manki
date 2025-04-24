@@ -15,11 +15,21 @@ wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
 std::string solution;
 wxStaticBitmap* image;
 wxBoxSizer* boxSizer = new wxBoxSizer(wxVERTICAL);
+wxBoxSizer* browser_box_sizer = new wxBoxSizer(wxVERTICAL);
 int current_skill_id = 0;
 wxTextCtrl* textEntry; 
 wxCollapsiblePane* due_coll_pane; 
 wxCollapsiblePane* learnt_coll_pane; 
 wxCollapsiblePane* unlearnt_coll_pane; 
+wxCollapsiblePane* not_retaining_coll_pane; 
+wxWindow* due_win;
+wxWindow* learnt_win;
+wxWindow* unlearnt_win;
+wxWindow* not_retaining_win;
+wxSizer* dueSz;
+wxSizer* learntSz;
+wxSizer* unlearntSz;
+wxSizer* not_retaining_sizer;
 int due_coll_pane_height;
 int learnt_coll_pane_height;
 int unlearnt_coll_pane_height;
@@ -41,14 +51,16 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         learnt_coll_pane = new wxCollapsiblePane(main_panel, 201, "Learnt Skills:", wxDefaultPosition, wxSize(400, 50));
         unlearnt_coll_pane = new wxCollapsiblePane(main_panel, 202, "Unlearnt Skills:", wxDefaultPosition, wxSize(400, 50));
         wxStaticBitmap* logo = new wxStaticBitmap(main_panel, wxID_ANY, wxBitmap(wxImage(wxBitmap("logo.png", wxBITMAP_TYPE_PNG).ConvertToImage()).Scale(200,200)), wxPoint(150,50), wxSize(200, 200));
+        wxButton* browser_button = new wxButton(main_panel, wxID_ANY, "Skill Browser", wxPoint(150,50), wxSize(100,35));
+        browser_button->Bind(wxEVT_BUTTON, &MainFrame::OnBrowserButtonClicked, this);
         int number_of_skills = get_number_of_skills();
 
-        wxWindow* due_win = due_coll_pane->GetPane();
-        wxWindow* learnt_win = learnt_coll_pane->GetPane();
-        wxWindow* unlearnt_win = unlearnt_coll_pane->GetPane();
-        wxSizer* dueSz = new wxGridSizer(number_of_skills, 2, 0, 0);
-        wxSizer* learntSz = new wxGridSizer(number_of_skills, 2, 0, 0);
-        wxSizer* unlearntSz = new wxGridSizer(number_of_skills, 2, 0, 0);
+        due_win = due_coll_pane->GetPane();
+        learnt_win = learnt_coll_pane->GetPane();
+        unlearnt_win = unlearnt_coll_pane->GetPane();
+        dueSz = new wxGridSizer(number_of_skills, 2, 0, 0);
+        learntSz = new wxGridSizer(number_of_skills, 2, 0, 0);
+        unlearntSz = new wxGridSizer(number_of_skills, 2, 0, 0);
         due_win->SetSizer(dueSz);
         learnt_win->SetSizer(learntSz);
         unlearnt_win->SetSizer(unlearntSz);
@@ -64,6 +76,20 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         
         main_book->Bind(wxEVT_COLLAPSIBLEPANE_CHANGED, &MainFrame::OnCollapsiblePaneClicked, this);
 
+        // Sets up browser panel 
+        wxPanel* browser_panel = new wxPanel(main_book);
+        wxButton* browser_back_button = new wxButton(browser_panel, wxID_ANY, "Back to Main Menu", wxPoint(150,50), wxSize(100,35));
+        browser_back_button->Bind(wxEVT_BUTTON, &MainFrame::OnBackButtonClicked, this);
+        wxStaticBitmap* browser_panel_logo = new wxStaticBitmap(browser_panel, wxID_ANY, wxBitmap(wxImage(wxBitmap("logo.png", wxBITMAP_TYPE_PNG).ConvertToImage()).Scale(200,200)), wxPoint(150,50), wxSize(200, 200));
+        
+        browser_panel->SetSizer(browser_box_sizer);
+        not_retaining_coll_pane = new wxCollapsiblePane(browser_panel, 203, "New Skills", wxDefaultPosition, wxSize(400, 50));
+        not_retaining_win = not_retaining_coll_pane->GetPane();
+        not_retaining_sizer = new wxGridSizer(number_of_skills, 2, 0, 0);
+        not_retaining_win->SetSizer(not_retaining_sizer);
+        not_retaining_sizer->SetSizeHints(not_retaining_win);
+        browser_box_sizer->Add(browser_panel_logo, wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+        browser_box_sizer->Add(not_retaining_coll_pane, wxALL, 5);
 
         // Creates buttons for each skill
         std::string* skill_names = get_skill_names();
@@ -78,7 +104,7 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
                skill_status[i] = current_skill_status;
 
         }
-
+        bool not_retaining = false;
         for(int i = 0; i < number_of_skills; i++){
                 // wx_IDs may not be one or zero, so we use 2i for the skill button and 2i+1 for the stats button
                 switch(skill_status[i])
@@ -98,16 +124,27 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
                                 learntSz->Add(new wxButton(learnt_win, 2*(i+1) + 1, "Stats", wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
                                 break;
                         case 2:
-                                unlearnt_coll_pane_height += 35;
-                                unlearntSz->Add(new wxButton(unlearnt_win, 2*(i+1), skill_names[i] , wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
-                                unlearntSz->Add(new wxButton(unlearnt_win, 2*(i+1) + 1, "Stats", wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
-                                break;
+                                if(get_skill_retaining(i+1) == "TRUE"){
+                                        unlearnt_coll_pane_height += 35;
+                                        unlearntSz->Add(new wxButton(unlearnt_win, 2*(i+1), skill_names[i] , wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                        unlearntSz->Add(new wxButton(unlearnt_win, 2*(i+1) + 1, "Stats", wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                        break;
+                                } else{
+                                        not_retaining_sizer->Add(new wxButton(not_retaining_win, 2*(i+1), skill_names[i] , wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                        not_retaining_sizer->Add(new wxButton(not_retaining_win, 2*(i+1) + 1, "Add Skill", wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                        Connect(2*(i+1), wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
+                                        Connect(2*(i+1) + 1, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnAddSkillButtonClicked));
+                                        not_retaining = true;
+                                        break;
+                                }
                         default:
                                 throw std::invalid_argument("Invalid skill status");
                 }
-
-                Connect(2*(i+1), wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
-                Connect(2*(i+1) + 1, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnStatsButtonClicked));
+                if(not_retaining == false){
+                        Connect(2*(i+1), wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
+                        Connect(2*(i+1) + 1, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnStatsButtonClicked));
+                }
+                not_retaining = false;
         }
         due_coll_pane->Expand();
 
@@ -127,8 +164,74 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         boxSizer->Add(image, 0, wxCENTER | wxALL, 10);
         boxSizer->Add(textEntry, 0, wxCENTER | wxALL, 10);
         skill_panel->SetSizer(boxSizer);
+        main_book->AddPage(skill_panel, "Practice");
+        main_book->AddPage(browser_panel, "New Skills");
+}
 
-        main_book->AddPage(skill_panel, "Welcome");
+void MainFrame::UpdateMainPanel(){
+
+        int number_of_skills = get_number_of_skills();
+        due_win->DestroyChildren();
+        learnt_win->DestroyChildren();
+        unlearnt_win->DestroyChildren();
+        not_retaining_win->DestroyChildren();
+        
+        // Creates buttons for each skill
+        std::string* skill_names = get_skill_names();
+
+        std::cout << skill_names[0] << '\n';
+
+        std::map<int, int> skill_status;
+        int current_skill_status;
+
+        for(int i = 0; i < number_of_skills; i++){
+               current_skill_status = get_skill_status(i+1); 
+               skill_status[i] = current_skill_status;
+
+        }
+        bool not_retaining = false;
+        for(int i = 0; i < number_of_skills; i++){
+                // wx_IDs may not be one or zero, so we use 2i for the skill button and 2i+1 for the stats button
+                switch(skill_status[i])
+                {
+                        case 0:
+                                due_coll_pane_height += 35;
+                                dueSz->Add(new wxButton(due_win, 2*(i+1), skill_names[i] , wxPoint(150, due_coll_pane_height - 200), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                dueSz->Add(new wxButton(due_win, 2*(i+1) + 1, "Stats", wxPoint(150, due_coll_pane_height - 200), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                due_win->Fit();
+                                due_coll_pane->SetMinSize(wxSize(400,due_coll_pane_height));
+                                dueSz->Layout();
+                                break;
+                        case 1:
+                                std::cout << "Adding to learnt win\n";
+                                learnt_coll_pane_height += 35;
+                                learntSz->Add(new wxButton(learnt_win, 2*(i+1), skill_names[i] , wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                learntSz->Add(new wxButton(learnt_win, 2*(i+1) + 1, "Stats", wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                break;
+                        case 2:
+                                if(get_skill_retaining(i+1) == "TRUE"){
+                                        unlearnt_coll_pane_height += 35;
+                                        unlearntSz->Add(new wxButton(unlearnt_win, 2*(i+1), skill_names[i] , wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                        unlearntSz->Add(new wxButton(unlearnt_win, 2*(i+1) + 1, "Stats", wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                        break;
+                                } else{
+                                        not_retaining_sizer->Add(new wxButton(not_retaining_win, 2*(i+1), skill_names[i] , wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                        not_retaining_sizer->Add(new wxButton(not_retaining_win, 2*(i+1) + 1, "Add Skill", wxPoint(150,50), wxSize(200,35)), wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
+                                        Connect(2*(i+1), wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
+                                        Connect(2*(i+1) + 1, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnAddSkillButtonClicked));
+                                        not_retaining = true;
+                                        break;
+                                }
+                        default:
+                                throw std::invalid_argument("Invalid skill status");
+                }
+                if(not_retaining == false){
+                        Connect(2*(i+1), wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
+                        Connect(2*(i+1) + 1, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnStatsButtonClicked));
+                }
+                not_retaining = false;
+        }
+        not_retaining_sizer->Layout();
 }
 
 void MainFrame::OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& evt) {
@@ -151,6 +254,8 @@ void MainFrame::OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& evt) {
                                 adjusted_pane = unlearnt_coll_pane;
                                 adjusted_pane_height = unlearnt_coll_pane_height;
                                 break;
+                        case 203:
+                                adjusted_pane = not_retaining_coll_pane;
                 }
 
                 // std::cout << std::to_string(adjusted_pane_height) + "\n";
@@ -185,6 +290,11 @@ void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
 
 }
 
+void MainFrame::OnBrowserButtonClicked(wxCommandEvent& evt) {
+        main_book->SetSelection(2);
+        textEntry->Clear();
+}
+
 void MainFrame::OnStatsButtonClicked(wxCommandEvent& evt) {
         // skillIDs start at 1 and button ids start at 2, so we subtract 1
         int skillID = ((evt.GetId()-1)/2);
@@ -193,6 +303,24 @@ void MainFrame::OnStatsButtonClicked(wxCommandEvent& evt) {
 
         wxMessageBox(stats, skill_name + " Stats");
 }
+
+void MainFrame::OnAddSkillButtonClicked(wxCommandEvent& evt) {
+        // skillIDs start at 1 and button ids start at 2, so we subtract 1
+        int skillID = ((evt.GetId()-1)/2);
+        update_skill_value(skillID, "RETAINING", "TRUE");
+
+        wxMessageBox("Skill Added!");
+        wxWindow* skill_ctrl = wxWindow::FindWindowById(evt.GetId()-1, this);
+        wxWindow* add_ctrl = wxWindow::FindWindowById(evt.GetId(), this);
+        skill_ctrl->Destroy();
+        add_ctrl->Destroy();
+        browser_box_sizer->Layout(); 
+        MainFrame::UpdateMainPanel();
+        main_sizer->Layout();
+
+}
+
+
 
 void MainFrame::OnTextChanged(wxCommandEvent& evt) {
         wxString str = wxString::Format("Text: %s", evt.GetString());
@@ -208,6 +336,7 @@ void MainFrame::OnTextEntered(wxCommandEvent& evt) {
                 update_fsrs_on_answer(current_skill_id, 1);
                 textEntry->Clear();
         }
+        MainFrame::UpdateMainPanel();
 }
 
 void MainFrame::OnBackButtonClicked(wxCommandEvent& evt) {
