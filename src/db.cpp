@@ -31,7 +31,8 @@ int initialize_database()
                      "STABILITY FLOAT NOT NULL,"
                      "DIFFICULTY FLOAT NOT NULL,"
                      "LAST_REVIEW_TIME INT NOT NULL,"
-                     "PROBLEM_TIME FLOAT NOT NULL);");
+                     "PROBLEM_TIME FLOAT NOT NULL,"
+                     "RETAINING TEXT NOT NULL);");
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);
 
@@ -62,26 +63,26 @@ int insert_default_values()
 {
         sqlite3* DB;
         char* messageError;
-        std::string sql("INSERT INTO SKILL VALUES(1, 'Addition', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(2, 'Subtraction', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(3, 'Multiplication', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(4, 'Power Rule', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(5, 'Fraction Addition', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(6, '2x2 Matrix Determinants', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(7, '3x3 Matrix Determinants', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(8, 'Quadratic Formula', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(9, 'Product Rule', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(10, 'Sin Values', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(11, 'Cos Values', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(12, 'Tan Values', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(13, '2x2 Matrix Multiplication', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(14, 'Matrix Vector Multiplication', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(15, 'Triangle Area', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(16, 'Circle Area', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(17, 'Integration Power Rule', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(18, 'Derivatives of Trigonometric Functions', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(19, 'Pythagorean Theorem', -1, -1, -1, -1, 10);"
-                   "INSERT INTO SKILL VALUES(20, 'Partial Derivatives', -1, -1, -1, -1, 10);");
+        std::string sql("INSERT INTO SKILL VALUES(1, 'Addition', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(2, 'Subtraction', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(3, 'Multiplication', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(4, 'Power Rule', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(5, 'Fraction Addition', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(6, '2x2 Matrix Determinants', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(7, '3x3 Matrix Determinants', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(8, 'Quadratic Formula', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(9, 'Product Rule', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(10, 'Sin Values', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(11, 'Cos Values', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(12, 'Tan Values', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(13, '2x2 Matrix Multiplication', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(14, 'Matrix Vector Multiplication', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(15, 'Triangle Area', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(16, 'Circle Area', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(17, 'Integration Power Rule', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(18, 'Derivatives of Trigonometric Functions', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(19, 'Pythagorean Theorem', -1, -1, -1, -1, 10, 'FALSE');"
+                   "INSERT INTO SKILL VALUES(20, 'Partial Derivatives', -1, -1, -1, -1, 10, 'FALSE');");
 
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);
@@ -222,6 +223,38 @@ std::string get_skill_name(int skillID)
         std::string intermediateVariable = currentSkillName;
         return intermediateVariable;
 }
+
+std::string currentSkillRetaining;
+static int get_skill_retaining_callback(void* data, int argc, char** argv, char** azColRetaining)
+{
+        currentSkillRetaining= argv[0];
+        return 0;
+}
+
+std::string get_skill_retaining(int skillID)
+{
+        sqlite3* DB;
+        int exit = 0;
+        exit = sqlite3_open("../data/manki.db", &DB);
+        std::string data("CALLBACK FUNCTION");
+
+        std::string sql("SELECT RETAINING FROM SKILL WHERE ID = " + std::to_string(skillID) + ";");
+
+        if(exit){
+                std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
+                return "";
+        } 
+
+        exit = sqlite3_exec(DB, sql.c_str(), get_skill_retaining_callback, (void*)data.c_str(), NULL);
+        if(exit != SQLITE_OK){
+                std::cerr << "Error retrieving skill retaining!" << std::endl;
+                return "";
+        } 
+  
+        std::string intermediateVariable = currentSkillRetaining;
+        return intermediateVariable;
+}
+
 
 std::string* get_skill_names(){
             int number_of_skills = get_number_of_skills();
