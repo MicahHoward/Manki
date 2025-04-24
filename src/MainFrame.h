@@ -10,6 +10,7 @@ class MainFrame : public wxFrame
                 void OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& evt);
                 void OnSkillButtonClicked(wxCommandEvent& evt);
                 void OnStatsButtonClicked(wxCommandEvent& evt);
+                void OnAddSkillButtonClicked(wxCommandEvent& evt);
                 //void OnSubtractionButtonClicked(wxCommandEvent& evt);
                 //void OnMultiplicationButtonClicked(wxCommandEvent& evt);
                 void OnBackButtonClicked(wxCommandEvent& evt);
