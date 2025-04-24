@@ -8,6 +8,7 @@ class MainFrame : public wxFrame
                 MainFrame(const wxString& title);
         private:
                 void OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& evt);
+                void UpdateMainPanel();
                 void OnSkillButtonClicked(wxCommandEvent& evt);
                 void OnStatsButtonClicked(wxCommandEvent& evt);
                 void OnAddSkillButtonClicked(wxCommandEvent& evt);
