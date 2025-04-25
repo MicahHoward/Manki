@@ -47,7 +47,7 @@ std::string* generate_partial_derivatives_problem()
                 }
         }
 
-        std::string problem = function[2] + function[1] + function[0]; 
+        std::string problem = "\f = " + function[2] + " + " + function[1] + " + " + function[0] + ", \\frac{\\partial f}{\\partial " + variables[partial_term-1] + "} = ?"; 
         std::string solution = partial_derivative[2] + " + " + partial_derivative[1] + " + " + partial_derivative[0];
         std::string* returnValue = new std::string[2];
         returnValue[0] = problem;
