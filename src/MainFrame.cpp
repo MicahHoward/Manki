@@ -44,10 +44,10 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         main_book = new wxSimplebook(this, wxID_ANY);
 
         //
-        wxPanel* main_panel = new wxPanel(main_book);
-        due_coll_pane = new wxCollapsiblePane(main_panel, 200, "Due Skills:", wxDefaultPosition, wxSize(400, 50));
-        learnt_coll_pane = new wxCollapsiblePane(main_panel, 201, "Learnt Skills:", wxDefaultPosition, wxSize(400, 50));
-        unlearnt_coll_pane = new wxCollapsiblePane(main_panel, 202, "Unlearnt Skills:", wxDefaultPosition, wxSize(400, 50));
+        auto main_panel = new wxPanel(main_book);
+        due_coll_pane = new wxCollapsiblePane(main_panel, 200, "Due Skills:", wxDefaultPosition, wxSize(400, 25));
+        learnt_coll_pane = new wxCollapsiblePane(main_panel, 201, "Learnt Skills:", wxDefaultPosition, wxSize(400, 25));
+        unlearnt_coll_pane = new wxCollapsiblePane(main_panel, 202, "Unlearnt Skills:", wxDefaultPosition, wxSize(400, 25));
         wxStaticBitmap* logo = new wxStaticBitmap(main_panel, wxID_ANY, wxBitmap(wxImage(wxBitmap("logo.png", wxBITMAP_TYPE_PNG).ConvertToImage()).Scale(200,200)), wxPoint(150,50), wxSize(200, 200));
         wxButton* browser_button = new wxButton(main_panel, wxID_ANY, "Skill Browser", wxPoint(150,50), wxSize(100,35));
         browser_button->Bind(wxEVT_BUTTON, &MainFrame::OnBrowserButtonClicked, this);
@@ -68,9 +68,10 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         learnt_sizer->SetSizeHints(learnt_win);
         unlearnt_sizer->SetSizeHints(unlearnt_win);
         main_sizer->Add(logo, wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
-        main_sizer->Add(due_coll_pane, wxALL, 5);
-        main_sizer->Add(learnt_coll_pane, wxALL, 5);
-        main_sizer->Add(unlearnt_coll_pane, wxALL, 5);
+        main_sizer->Add(browser_button, 0, wxALIGN_CENTER, 5);
+        main_sizer->Add(due_coll_pane, 0, wxALIGN_CENTER, 5);
+        main_sizer->Add(learnt_coll_pane, 0, wxALIGN_CENTER, 5);
+        main_sizer->Add(unlearnt_coll_pane, 0, wxALIGN_CENTER, 5);
 
         main_panel->SetSizer(main_sizer);
         
@@ -233,7 +234,7 @@ void MainFrame::OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& evt) {
                 // std::cout << std::to_string(adjusted_pane_height) + "\n";
 
                 if(adjusted_pane->IsCollapsed() == true){
-                        adjusted_pane->SetMinSize(wxSize(400, 50));
+                        adjusted_pane->SetMinSize(wxSize(400, 25));
                 } else{
                         std::cout << "Setting min height to" + std::to_string(adjusted_pane_height) + "\n";
                         adjusted_pane->SetMinSize(wxSize(400, adjusted_pane_height));
