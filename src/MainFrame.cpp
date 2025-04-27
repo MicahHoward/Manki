@@ -45,9 +45,9 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
         //
         auto main_panel = new wxPanel(main_book);
-        due_coll_pane = new wxCollapsiblePane(main_panel, 200, "Due Skills:", wxDefaultPosition, wxSize(400, 25));
-        learnt_coll_pane = new wxCollapsiblePane(main_panel, 201, "Learnt Skills:", wxDefaultPosition, wxSize(400, 25));
-        unlearnt_coll_pane = new wxCollapsiblePane(main_panel, 202, "Unlearnt Skills:", wxDefaultPosition, wxSize(400, 25));
+        due_coll_pane = new wxCollapsiblePane(main_panel, 200, "Due Skills:", wxDefaultPosition, wxSize(400, 20));
+        learnt_coll_pane = new wxCollapsiblePane(main_panel, 201, "Learnt Skills:", wxDefaultPosition, wxSize(400, 20));
+        unlearnt_coll_pane = new wxCollapsiblePane(main_panel, 202, "Unlearnt Skills:", wxDefaultPosition, wxSize(400, 20));
         wxStaticBitmap* logo = new wxStaticBitmap(main_panel, wxID_ANY, wxBitmap(wxImage(wxBitmap("logo.png", wxBITMAP_TYPE_PNG).ConvertToImage()).Scale(200,200)), wxPoint(150,50), wxSize(200, 200));
         wxButton* browser_button = new wxButton(main_panel, wxID_ANY, "Skill Browser", wxPoint(150,50), wxSize(100,35));
         browser_button->Bind(wxEVT_BUTTON, &MainFrame::OnBrowserButtonClicked, this);
@@ -79,23 +79,23 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
         // Sets up browser panel 
         wxPanel* browser_panel = new wxPanel(main_book);
-        wxButton* browser_back_button = new wxButton(browser_panel, wxID_ANY, "Back to Main Menu", wxPoint(150,50), wxSize(100,35));
+        wxButton* browser_back_button = new wxButton(browser_panel, wxID_ANY, "Main Menu", wxPoint(150,50), wxSize(100,35));
         browser_back_button->Bind(wxEVT_BUTTON, &MainFrame::OnBackButtonClicked, this);
         wxStaticBitmap* browser_panel_logo = new wxStaticBitmap(browser_panel, wxID_ANY, wxBitmap(wxImage(wxBitmap("logo.png", wxBITMAP_TYPE_PNG).ConvertToImage()).Scale(200,200)), wxPoint(150,50), wxSize(200, 200));
         
         browser_panel->SetSizer(browser_box_sizer);
-        not_retaining_coll_pane = new wxCollapsiblePane(browser_panel, 203, "New Skills", wxDefaultPosition, wxSize(400, 50));
+        not_retaining_coll_pane = new wxCollapsiblePane(browser_panel, 203, "New Skills", wxDefaultPosition, wxSize(400, 20));
         not_retaining_win = not_retaining_coll_pane->GetPane();
-        not_retaining_sizer = new wxGridSizer(number_of_skills, 2, 0, 0);
+        not_retaining_sizer = new wxGridSizer(0, 2, 0, 0);
         not_retaining_win->SetSizer(not_retaining_sizer);
         not_retaining_sizer->SetSizeHints(not_retaining_win);
         browser_box_sizer->Add(browser_panel_logo, wxSizerFlags().CenterHorizontal().Border(wxRIGHT | wxLEFT, 40));
-        browser_box_sizer->Add(not_retaining_coll_pane, wxALL, 5);
+        browser_box_sizer->Add(browser_back_button, 0, wxALIGN_CENTER, 5);
+        browser_box_sizer->Add(not_retaining_coll_pane, 0, wxALIGN_CENTER, 5);
 
         // Creates buttons for each skill
         std::string* skill_names = get_skill_names();
 
-        std::cout << skill_names[0] << '\n';
 
         std::map<int, int> skill_status;
         int current_skill_status;
@@ -143,7 +143,6 @@ void MainFrame::UpdateMainPanel(){
         // Creates buttons for each skill
         std::string* skill_names = get_skill_names();
 
-        std::cout << skill_names[0] << '\n';
 
         std::map<int, int> skill_status;
         int current_skill_status;
@@ -168,7 +167,6 @@ void MainFrame::UpdateMainPanel(){
                                 due_sizer->Layout();
                                 break;
                         case 1:
-                                std::cout << "Adding to learnt win\n";
                                 learnt_coll_pane_height += 35;
                                 learnt_sizer->Add(new wxButton(learnt_win, 2*(i+1), skill_names[i]), flags);
                                 learnt_sizer->Add(new wxButton(learnt_win, 2*(i+1) + 1, "Stats"), flags);
@@ -192,6 +190,9 @@ void MainFrame::UpdateMainPanel(){
                                         Connect(2*(i+1), wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
                                         Connect(2*(i+1) + 1, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnAddSkillButtonClicked));
                                         not_retaining = true;
+                                        learnt_coll_pane->Fit();
+                                        learnt_sizer->Layout();
+
                                         break;
                                 }
                         default:
@@ -203,7 +204,34 @@ void MainFrame::UpdateMainPanel(){
                 }
                 not_retaining = false;
         }
+
+        // Adds text to empty windows
+        if(due_win->GetChildren().size() == 0){
+                due_coll_pane_height+= 35;
+                due_sizer->Add(new wxStaticText(due_win, wxID_ANY, "No skills due"), 0, wxALIGN_CENTER);
+                due_coll_pane->Fit();
+                due_sizer->Layout();
+        }
+        if(learnt_win->GetChildren().size() == 0){
+                learnt_coll_pane_height+= 35;
+                learnt_sizer->Add(new wxStaticText(learnt_win, wxID_ANY, "No skills learnt and not due"), 0, wxALIGN_CENTER);
+                learnt_coll_pane->Fit();
+                learnt_sizer->Layout();
+        }
+        if(unlearnt_win->GetChildren().size() == 0){
+                unlearnt_coll_pane_height+= 35;
+                unlearnt_sizer->Add(new wxStaticText(unlearnt_win, wxID_ANY, "No skills unlearnt"), 0, wxALIGN_CENTER);
+                unlearnt_coll_pane->Fit();
+                unlearnt_sizer->Layout();
+        }
+        if(not_retaining_win->GetChildren().size() == 0){
+                not_retaining_coll_pane_height += 35;
+                not_retaining_sizer->Add(new wxStaticText(not_retaining_win, wxID_ANY, "No skills to add"), 0, wxALIGN_CENTER);
+                not_retaining_coll_pane->Fit();
+                not_retaining_sizer->Layout();
+        }
         not_retaining_sizer->Layout();
+        browser_box_sizer->Layout();
         main_sizer->Layout();
 }
 
@@ -229,14 +257,13 @@ void MainFrame::OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& evt) {
                                 break;
                         case 203:
                                 adjusted_pane = not_retaining_coll_pane;
+                                adjusted_pane_height = not_retaining_coll_pane_height;
                 }
 
-                // std::cout << std::to_string(adjusted_pane_height) + "\n";
 
                 if(adjusted_pane->IsCollapsed() == true){
-                        adjusted_pane->SetMinSize(wxSize(400, 25));
+                        adjusted_pane->SetMinSize(wxSize(400, 20));
                 } else{
-                        std::cout << "Setting min height to" + std::to_string(adjusted_pane_height) + "\n";
                         adjusted_pane->SetMinSize(wxSize(400, adjusted_pane_height));
                 }
                 due_sizer->Layout();
@@ -244,6 +271,7 @@ void MainFrame::OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& evt) {
                 unlearnt_sizer->Layout();
                 not_retaining_sizer->Layout();
                 main_sizer->Layout();
+                browser_box_sizer->Layout();
 
 }
 
@@ -278,6 +306,39 @@ void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
         main_book->SetSelection(1);
 
 }
+
+void MainFrame::GenerateNewProblem(int skillID) {
+        // skillIDs start at 1 and button ids start at 2, so we subtract 1
+        std::string* problem_and_solution = generate_problem(skillID);
+
+        // TODO: REPLACE THIS GARBAGE BY SWITCHING TO MicroLaTeX OR SOME OTHER LIBRARY
+        int mypid = fork();
+
+        if(0 == mypid){
+                char* args[]={"./latex_generator", problem_and_solution[0].data(), "problem.png", NULL};
+                execvp(args[0], args);
+
+        }
+        // waits for
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
+        solution = problem_and_solution[1];
+        std::string stupid_string = ".";
+        if(solution.contains(stupid_string)){
+                for(int i = 0; i < solution.size(); i++){
+                        if(solution.at(i) == stupid_string){
+                                solution = solution.substr(0, i+3);
+                                break;
+                        }
+                }
+
+        }
+        current_skill_id = skillID;
+        main_book->SetSelection(1);
+
+}
+
+
 
 void MainFrame::OnBrowserButtonClicked(wxCommandEvent& evt) {
         main_book->SetSelection(2);
@@ -316,16 +377,18 @@ void MainFrame::OnTextChanged(wxCommandEvent& evt) {
 }
 
 void MainFrame::OnTextEntered(wxCommandEvent& evt) {
-        if(evt.GetString() == solution){
-                wxMessageBox(wxT("The solution was " + solution), "Correct!");
+        if(return_spaceless_string(std::string(evt.GetString())) == return_spaceless_string(solution)){
+                wxMessageBox(wxT("The solution was \"" + solution + "\"."), "Correct!");
                 update_fsrs_on_answer(current_skill_id, 3);
                 textEntry->Clear();
+                MainFrame::UpdateMainPanel();
+                main_book->SetSelection(0);
         } else{
-                wxMessageBox(wxT("The solution was " + solution), "Incorrect!");
+                wxMessageBox(wxT("The solution was \"" + solution + "\"."), "Incorrect!");
                 update_fsrs_on_answer(current_skill_id, 1);
                 textEntry->Clear();
+                MainFrame::GenerateNewProblem(current_skill_id);
         }
-        MainFrame::UpdateMainPanel();
 }
 
 void MainFrame::OnBackButtonClicked(wxCommandEvent& evt) {

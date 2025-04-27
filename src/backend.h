@@ -1,6 +1,7 @@
 #pragma once
 #include <stop_token>
 
+std::string return_spaceless_string(std::string input);
 int generate_latex_image(std::string expression);
 int update_fsrs_on_answer(int skillID, int grade);
 int print_skill_info(int skillID);

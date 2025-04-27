@@ -29,6 +29,16 @@
 
 std::string user_response;
 
+std::string return_spaceless_string(std::string input){
+        std::string output = "";
+        for(int i = 0; i < input.size(); i++){
+                if(input[i] != ' '){
+                       output = output + input[i]; 
+                }
+        }
+        return output;
+}
+
 int generate_latex_image(std::string expression)
 {
 	// Single class
@@ -74,15 +84,15 @@ int update_fsrs_on_answer(int skillID, int grade)
         }
 
         update_last_review_time(skillID, std::to_string(reviewTime));
-
-        update_retrievability_on_review(skillID);
+        if(grade == 3){
+                update_retrievability_on_review(skillID);
+        }
         return 0;
 }
 
 
 int get_skill_status(int skillID){
         float currentRetrievability = get_skill_value(skillID, "RETRIEVABILITY");
-        std::cout << "currentRetrievability is " + std::to_string(currentRetrievability) + "\n";
         if(currentRetrievability >= 0.90){
                 // The int get_skill_status returns indicates which collapsible pane the skill should be in.
                 // 0 for due, 1 for not due, 2 for not learnt
