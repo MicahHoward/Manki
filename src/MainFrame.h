@@ -10,6 +10,7 @@ class MainFrame : public wxFrame
                 void OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& evt);
                 void UpdateMainPanel();
                 void OnSkillButtonClicked(wxCommandEvent& evt);
+                void GenerateNewProblem(int skillID);
                 void OnStatsButtonClicked(wxCommandEvent& evt);
                 void OnAddSkillButtonClicked(wxCommandEvent& evt);
                 //void OnSubtractionButtonClicked(wxCommandEvent& evt);

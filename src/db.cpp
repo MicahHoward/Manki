@@ -287,9 +287,7 @@ int update_skill_value(int skillID, std::string attribute, float newValue)
         if(exit != SQLITE_OK){
                 std::cerr << "Error updating skill value!" << std::endl;
                 sqlite3_free(messageError);
-        } else{
-                std::cout << "Skill value update completed!" << std::endl;
-        }
+        } 
         return 0;
 }
 int update_skill_value(int skillID, std::string attribute, std::string newValue)
