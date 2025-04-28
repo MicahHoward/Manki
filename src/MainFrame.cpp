@@ -167,7 +167,7 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
         if(needs_welcome == 0){
                 wxMessageBox("Welcome to Manki!\nAdd skills from this browser that you would like to retain with Manki," 
-                                "and then go to \"My Skills\" to start your practice!\nLater on, that is where you will see what Skills are due for review at any given time.", "Welcome");
+                                " and then go to \"My Skills\" to start your practice!\nLater on, that is where you will see what Skills are due for review at any given time.", "Welcome");
                 last_selection = 2;
                 main_book->SetSelection(2);
         }
@@ -242,19 +242,20 @@ void MainFrame::UpdateMainPanel(){
                                         learnt_coll_pane->Fit();
                                         learnt_sizer->Layout();
 
-                                        timed_coll_pane_height += 35;
-                                        timed_sizer->Add(new wxButton(timed_win, 500*(i+1), skill_names[i]), flags);
-                                        timed_sizer->Add(new wxButton(timed_win, 500*(i+1) + 1, "Add Timed Skill"), flags);
-                                        Connect(500*(i+1), wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
-                                        Connect(500*(i+1) + 1, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnAddTimedSkillButtonClicked));
-                                        learnt_coll_pane->Fit();
-                                        learnt_sizer->Layout();
-
                                         break;
                                 }
                         default:
                                 throw std::invalid_argument("Invalid skill status");
                 }
+                timed_coll_pane_height += 35;
+                timed_sizer->Add(new wxButton(timed_win, 500*(i+1), skill_names[i]), flags);
+                timed_sizer->Add(new wxButton(timed_win, 500*(i+1) + 1, "Add Timed Skill"), flags);
+                Connect(500*(i+1), wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
+                Connect(500*(i+1) + 1, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnAddTimedSkillButtonClicked));
+                learnt_coll_pane->Fit();
+                learnt_sizer->Layout();
+
+         
                 if(not_retaining == false){
                         Connect(2*(i+1), wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
                         Connect(2*(i+1) + 1, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnStatsButtonClicked));
