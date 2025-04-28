@@ -65,9 +65,10 @@ std::string* generate_partial_derivatives_problem()
                         solution = partial_derivative[i] + " + " + solution;
                 }
         }
-        std::string* returnValue = new std::string[2];
+        std::string* returnValue = new std::string[3];
         returnValue[0] = problem;
         returnValue[1] = solution;
+        returnValue[2] = "";
 
         return returnValue;
 }

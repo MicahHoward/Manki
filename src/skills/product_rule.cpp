@@ -34,9 +34,10 @@ std::string* generate_product_rule_problem()
         }
         std::string problem = std::to_string(first_coefficient) + "x^{" + std::to_string(first_power) + "}\\times" + std::to_string(second_coefficient) + "x^{" + std::to_string(second_power) + "}";
 
-        std::string* returnValue = new std::string[2];
+        std::string* returnValue = new std::string[3];
         returnValue[0] = problem;
         returnValue[1] = solution;
+        returnValue[2] = "";
 
         return returnValue;
 }

@@ -27,9 +27,10 @@ std::string* generate_two_by_two_matrix_multiplication_problem()
         std::string solution = "[[" + std::to_string(first_number*fifth_number + second_number*seventh_number) 
                 + ", " + std::to_string(first_number*sixth_number + second_number*eighth_number) + "], [" + 
                 std::to_string(third_number*fifth_number + fourth_number*seventh_number) + ", " + std::to_string(third_number*sixth_number + fourth_number*eighth_number) + "]]";
-        std::string* returnValue = new std::string[2];
+        std::string* returnValue = new std::string[3];
         returnValue[0] = problem;
         returnValue[1] = solution;
+        returnValue[2] = "";
 
         return returnValue;
 }

@@ -9,6 +9,7 @@ bool App::OnInit(){
         mainFrame->SetClientSize(800, 600);
         mainFrame->Center();
         mainFrame->Show();
+        mainFrame->SetIcon(wxIcon("icon.png"));
         wxImage::AddHandler(new wxPNGHandler);
         return true;
 }
