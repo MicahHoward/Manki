@@ -37,12 +37,28 @@ std::string* generate_fraction_addition_problem()
                 sum = sum / simplify;
                 lcm = lcm / simplify;
         }
+        std::string problem = "";
+        if(first_denominator == 1){
+                problem = std::to_string(first_numerator) + " + ";
+        } else{
+                problem = "\\frac{" + std::to_string(first_numerator) + "}{" + std::to_string(first_denominator) + "} + "; 
+        }
+        if(second_denominator == 1){
+                problem = problem + std::to_string(second_numerator) + " = ?";
+        } else{
+                problem = problem + "\\frac{" + std::to_string(second_numerator) + "}{" + std::to_string(second_denominator) + "} = ?"; 
+        }
+        std::string solution;
+        if(lcm == 1){
+                solution = std::to_string(sum); 
+        } else{
+                solution = std::to_string(sum) + "/" + std::to_string(lcm);
+        }
 
-        std::string problem = "\\frac{" + std::to_string(first_numerator) + "}{" + std::to_string(first_denominator) + "} + \\frac{" + std::to_string(second_numerator) + "}{" + std::to_string(second_denominator) +"} = ?"; 
-        std::string solution = std::to_string(sum) + "/" + std::to_string(lcm);
-        std::string* returnValue = new std::string[2];
+        std::string* returnValue = new std::string[3];
         returnValue[0] = problem;
         returnValue[1] = solution;
+        returnValue[2] = "Note:\nEnter fractions with a \"/\" between the numerator and the denominator.";
 
         return returnValue;
 }

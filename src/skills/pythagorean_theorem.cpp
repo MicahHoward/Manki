@@ -21,6 +21,6 @@ std::string* generate_pythagorean_theorem_problem()
         string* problem_and_solution = new string[3];
         problem_and_solution[0] = "a = " + to_string(first_side) + ", b =" + to_string(second_side) + ", c = ?";
         problem_and_solution[1] = to_string(hypotenuse);
-
+        problem_and_solution[2] = ""; 
         return problem_and_solution;
 }

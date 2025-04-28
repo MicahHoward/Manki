@@ -18,6 +18,7 @@ string* generate_subtraction_problem()
         string* problem_and_solution = new string[3];
         problem_and_solution[0] = to_string(first_number) + " - " + to_string(second_number) + " = ?";
         problem_and_solution[1] = to_string(difference);
+        problem_and_solution[2] = "";
 
         return problem_and_solution;
 }

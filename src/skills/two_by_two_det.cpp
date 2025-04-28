@@ -18,9 +18,10 @@ std::string* generate_two_by_two_det_problem()
 
         std::string problem = "\\begin{bmatrix}" + std::to_string(first_number) + " & " + std::to_string(second_number) + "\\\\" + std::to_string(third_number) + " & " + std::to_string(fourth_number) + "\\end{bmatrix}";
         std::string solution = std::to_string(determinant);
-        std::string* returnValue = new std::string[2];
+        std::string* returnValue = new std::string[3];
         returnValue[0] = problem;
         returnValue[1] = solution;
+        returnValue[2] = "";
 
         return returnValue;
 }

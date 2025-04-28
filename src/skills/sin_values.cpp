@@ -17,7 +17,8 @@ std::string* generate_sin_values_problem()
         std::string radian_angles[16] = {"0",  "\\frac{\\pi}{6}",  "\\frac{\\pi}{4}",   "\\frac{\\pi}{3}",  "\\frac{\\pi}{2}",  
                 "\\frac{2\\pi}{3}", "\\frac{3\\pi}{4}", "\\frac{5\\pi}{6}", "\\pi", "\\frac{7\\pi}{6}", "\\frac{5\\pi}{4}", 
                 "\\frac{4\\pi}{3}", "\\frac{3\\pi}{2}", "\\frac{5\\pi}{3}", "\\frac{7\\pi}{4}", "\\frac{11\\pi}{6}"};
-        std::string sin_values[16] = {"0","\\frac{1}{2}","\\frac{\\sqr{2}}{2}","\\frac{\\sqr{3}}{2}","1","\\frac{\\sqr{3}}{2}","\\frac{\\sqr{2}}{2}","\\frac{1}{2}","0","-\\frac{1}{2}","-\\frac{\\sqr{2}}{2}","-\\frac{\\sqr{3}}{2}","-1","-\\frac{\\sqr{3}}{2}","-\\frac{\\sqr{2}}{2}","-\\frac{1}{2}"};
+        std::cout << "made it to sin-values\n";
+        std::string sin_values[16] = {"0","1/2","\\sqr{2}/2","\\sqr{3}/2","1","\\sqr{3}/2","\\sqr{2}/2","1/2","0","-1/2","-\\sqr{2}/2","-\\sqr{3}/2","-1","-\\sqr{3}/2","-\\sqr{2}/2","-1/2"};
         
         if(angle_index % 2 == 0){
                 angle = radian_angles[angle_index]; 
@@ -30,9 +31,10 @@ std::string* generate_sin_values_problem()
 
         std::string problem = "sin(" + angle + ")";
         std::string solution = sin_values[angle_index];
-        std::string* returnValue = new std::string[2];
+        std::string* returnValue = new std::string[3];
         returnValue[0] = problem;
         returnValue[1] = solution;
+        returnValue[2] = "Note:\nEnter answer as a fraction with a \"/\" in between the numerator and the denominator.\nSquare roots should be entered as \"\\sqr{x}\".\nExample:\"-\\sqr{3}/2\".";
 
         return returnValue;
 }

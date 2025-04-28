@@ -17,7 +17,7 @@ std::string* generate_tan_values_problem()
         std::string radian_angles[16] = {"0",  "\\frac{\\pi}{6}",  "\\frac{\\pi}{4}",   "\\frac{\\pi}{3}",  "\\frac{\\pi}{2}",  
                 "\\frac{2\\pi}{3}", "\\frac{3\\pi}{4}", "\\frac{5\\pi}{6}", "\\pi", "\\frac{7\\pi}{6}", "\\frac{5\\pi}{4}", 
                 "\\frac{4\\pi}{3}", "\\frac{3\\pi}{2}", "\\frac{5\\pi}{3}", "\\frac{7\\pi}{4}", "\\frac{11\\pi}{6}"};
-        std::string tan_values[16] = {"0","\\frac{\\sqr{3}}{3}","1","\\sqr{3}","Not defined","-\\sqr{3}","-1","-\\frac{3}{3}","0","\\frac{3}{3}","1","\\sqr{3}","Not defined","-\\sqr{3}","-\\frac{\\sqr{3}}{3}","0"};
+        std::string tan_values[16] = {"0","\\sqr{3}/3","1","\\sqr{3}","Not defined","-\\sqr{3}","-1","-3/3","0","3/3","1","\\sqr{3}","Not defined","-\\sqr{3}","-\\sqr{3}/3","0"};
         
         if(angle_index % 2 == 0){
                 angle = radian_angles[angle_index]; 
@@ -30,9 +30,10 @@ std::string* generate_tan_values_problem()
 
         std::string problem = "tan(" + angle + ")";
         std::string solution = tan_values[angle_index];
-        std::string* returnValue = new std::string[2];
+        std::string* returnValue = new std::string[3];
         returnValue[0] = problem;
         returnValue[1] = solution;
+        returnValue[2] = "Note:\nEnter answer as a fraction with a \"/\" in between the numerator and the denominator.\nSquare roots should be entered as \"\\sqr{x}\".\nExample:\"-\\sqr{3}/2\".";
 
         return returnValue;
 }

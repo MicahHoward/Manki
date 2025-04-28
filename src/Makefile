@@ -4,7 +4,7 @@ manki: backend.o fsrs.o db.o utils.o skills/addition.o skills/multiplication.o s
 
 
 backend.o: backend.cpp
-	g++ -std=c++20 -c backend.cpp -I include
+	g++ -std=c++23 -c backend.cpp -I include
 
 fsrs.o: fsrs.cpp fsrs.h
 	g++ -c fsrs.cpp
@@ -12,7 +12,7 @@ fsrs.o: fsrs.cpp fsrs.h
 db.o: db.cpp db.h
 	g++ -c db.cpp
 utils.o: utils.cpp utils.h
-	g++ -c utils.cpp
+	g++ -std=c++23 -c utils.cpp
 skills/addition.o: skills/addition.cpp skills/addition.h
 	g++ -c skills/addition.cpp
 skills/multiplication.o: skills/multiplication.cpp skills/multiplication.h

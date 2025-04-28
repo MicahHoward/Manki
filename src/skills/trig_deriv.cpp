@@ -17,9 +17,10 @@ std::string* generate_trig_deriv_problem()
 
         std::string problem = trig_functions[index-1];
         std::string solution = trig_functions_derivatives[index-1];
-        std::string* returnValue = new std::string[2];
+        std::string* returnValue = new std::string[3];
         returnValue[0] = problem;
         returnValue[1] = solution;
+        returnValue[2] = "";
 
         return returnValue;
 }

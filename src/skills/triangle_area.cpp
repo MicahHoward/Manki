@@ -18,6 +18,7 @@ string* generate_triangle_area_problem()
         string* problem_and_solution = new string[3];
         problem_and_solution[0] = "b = " + to_string(base) + ", h =" + to_string(height) + ", A = ?";
         problem_and_solution[1] = to_string(area);
+        problem_and_solution[2] = "";
 
         return problem_and_solution;
 }

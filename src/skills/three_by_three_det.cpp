@@ -20,9 +20,10 @@ std::string* generate_three_by_three_det_problem()
                 + "\\\\" + std::to_string(matrix[3]) + " & " + std::to_string(matrix[4]) + " & " + std::to_string(matrix[5])
                 + "\\\\" + std::to_string(matrix[6]) + " & " + std::to_string(matrix[7]) + " & " + std::to_string(matrix[8]) + "\\end{bmatrix}";
         std::string solution = std::to_string(determinant);
-        std::string* returnValue = new std::string[2];
+        std::string* returnValue = new std::string[3];
         returnValue[0] = problem;
         returnValue[1] = solution;
+        returnValue[2] = "";
 
         return returnValue;
 }

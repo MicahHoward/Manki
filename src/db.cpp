@@ -32,7 +32,9 @@ int initialize_database()
                      "DIFFICULTY FLOAT NOT NULL,"
                      "LAST_REVIEW_TIME INT NOT NULL,"
                      "PROBLEM_TIME FLOAT NOT NULL,"
-                     "RETAINING TEXT NOT NULL);");
+                     "RETAINING TEXT NOT NULL,"
+                     "TIME FLOAT NOT NULL,"
+                     "BASE_SKILL_ID INT NOT NULL);");
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);
 
@@ -63,26 +65,26 @@ int insert_default_values()
 {
         sqlite3* DB;
         char* messageError;
-        std::string sql("INSERT INTO SKILL VALUES(1, 'Addition', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(2, 'Subtraction', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(3, 'Multiplication', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(4, 'Power Rule', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(5, 'Fraction Addition', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(6, '2x2 Matrix Determinants', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(7, '3x3 Matrix Determinants', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(8, 'Quadratic Formula', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(9, 'Product Rule', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(10, 'Sin Values', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(11, 'Cos Values', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(12, 'Tan Values', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(13, '2x2 Matrix Multiplication', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(14, 'Matrix Vector Multiplication', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(15, 'Triangle Area', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(16, 'Circle Area', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(17, 'Integration Power Rule', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(18, 'Derivatives of Trigonometric Functions', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(19, 'Pythagorean Theorem', -1, -1, -1, -1, 10, 'FALSE');"
-                   "INSERT INTO SKILL VALUES(20, 'Partial Derivatives', -1, -1, -1, -1, 10, 'FALSE');");
+        std::string sql("INSERT INTO SKILL VALUES(1, 'Addition', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(2, 'Subtraction', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(3, 'Multiplication', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(4, 'Power Rule', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(5, 'Fraction Addition', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(6, '2x2 Matrix Determinants', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(7, '3x3 Matrix Determinants', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(8, 'Quadratic Formula', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(9, 'Product Rule', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(10, 'Sin Values', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(11, 'Cos Values', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(12, 'Tan Values', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(13, '2x2 Matrix Multiplication', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(14, 'Matrix Vector Multiplication', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(15, 'Triangle Area', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(16, 'Circle Area', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(17, 'Integration Power Rule', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(18, 'Derivatives of Trigonometric Functions', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(19, 'Pythagorean Theorem', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);"
+                   "INSERT INTO SKILL VALUES(20, 'Partial Derivatives', -1, -1, -1, -1, 10, 'FALSE', 0.0, -1);");
 
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);
@@ -99,9 +101,11 @@ int insert_default_values()
         if(exit != SQLITE_OK){
                 std::cerr << "Error inserting to table!" << std::endl;
                 sqlite3_free(messageError);
+                return 1;
         } else{
                 std::cout << "Insertion has done completed!" << std::endl;
         }
+        sqlite3_close(DB);
         return 0;
 }
 
@@ -128,6 +132,8 @@ int read_database()
         } else{
                 std::cout << "Selection completed!" << std::endl;
         }
+
+        sqlite3_close(DB);
         return 0;
 }
 
@@ -159,6 +165,7 @@ int get_number_of_skills()
         //else{
          //       std::cout << "Selection completed!" << std::endl;
         //}
+        sqlite3_close(DB);
         return numberOfSkills;
 }
 
@@ -190,6 +197,8 @@ float get_skill_value(int skillID, std::string attribute)
         } 
   
         float intermediateVariable = currentSkillValue;
+
+        sqlite3_close(DB);
         return intermediateVariable;
 }
 
@@ -221,6 +230,8 @@ std::string get_skill_name(int skillID)
         } 
   
         std::string intermediateVariable = currentSkillName;
+
+        sqlite3_close(DB);
         return intermediateVariable;
 }
 
@@ -252,6 +263,8 @@ std::string get_skill_retaining(int skillID)
         } 
   
         std::string intermediateVariable = currentSkillRetaining;
+
+        sqlite3_close(DB);
         return intermediateVariable;
 }
 
@@ -288,6 +301,8 @@ int update_skill_value(int skillID, std::string attribute, float newValue)
                 std::cerr << "Error updating skill value!" << std::endl;
                 sqlite3_free(messageError);
         } 
+
+        sqlite3_close(DB);
         return 0;
 }
 int update_skill_value(int skillID, std::string attribute, std::string newValue)
@@ -314,5 +329,42 @@ int update_skill_value(int skillID, std::string attribute, std::string newValue)
         } else{
                 std::cout << "Skill value update completed!" << std::endl;
         }
+
+        sqlite3_close(DB);
         return 0;
 }
+
+int insert_timed_skill(int base_skill_id, int time_in_milliseconds)
+{
+        sqlite3* DB;
+        char* messageError;
+        std::string new_skill_name = "Timed " + get_skill_name(base_skill_id);
+        int new_skill_id = get_number_of_skills() + 1;
+        std::cout << std::to_string(new_skill_id) + "\n";
+        std::string sql("INSERT INTO SKILL VALUES(" + std::to_string(new_skill_id) + ", '" + new_skill_name + "', -1, -1, -1, -1, 10, 'FALSE', " + std::to_string(time_in_milliseconds) + ", " + std::to_string(base_skill_id) + ");");
+
+        std::cout << sql.c_str() + '\n';
+        int exit = 0;
+        exit = sqlite3_open("../data/manki.db", &DB);
+
+        if(exit){
+                std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
+                return -1;
+        } 
+        //else{
+        //        std::cout << "DB opened successfully!" << std::endl;
+        //}
+
+        exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messageError);
+        if(exit != SQLITE_OK){
+                std::cerr << "Error inserting to table!" << sqlite3_errmsg(DB) << std::endl;
+                sqlite3_free(messageError);
+                return -1;
+        } else{
+                std::cout << "Insertion has done completed!" << std::endl;
+        }
+        sqlite3_close(DB);
+        return new_skill_id;
+}
+
+

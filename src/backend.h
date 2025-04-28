@@ -8,7 +8,6 @@ int print_skill_info(int skillID);
 std::string get_skill_info(int skillID);
 int get_skill_status(int skillID);
 void user_guess(std::stop_token stoken);
-void problem_timer(std::stop_token stoken, std::stop_source threadToBeStopped, float problemTime);
 std::string* generate_problem(int skillID);
 std::string timed_input(int timeout_seconds); 
 int practice_skills();

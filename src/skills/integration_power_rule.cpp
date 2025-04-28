@@ -21,9 +21,10 @@ std::string* generate_integration_power_rule_problem()
 
                 solution = "\\frac{" + std::to_string(coefficient) + "}{" + std::to_string(exponent+1) + "}x^{" + std::to_string(exponent+1) + "} + C";
         }
-        std::string* returnValue = new std::string[2];
+        std::string* returnValue = new std::string[3];
         returnValue[0] = problem;
         returnValue[1] = solution;
+        returnValue[2] = "";
 
         return returnValue;
 }

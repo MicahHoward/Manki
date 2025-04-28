@@ -1,6 +1,7 @@
 #include <iostream>
 #include <random>
 #include <cmath>
+#include "../utils.h"
 using namespace std;
 
 string* generate_circle_area_problem() 
@@ -16,8 +17,9 @@ string* generate_circle_area_problem()
         double area = radius * radius * M_PI;
 
         string* problem_and_solution = new string[3];
-        problem_and_solution[0] = "r = " + to_string(radius) + "\\newline A = ?";
-        problem_and_solution[1] = to_string(area);
+        problem_and_solution[0] = "r = " + to_string(radius) + ", A = ?";
+        problem_and_solution[1] = return_rounded_number_string(to_string(area));
+        problem_and_solution[2] = "Note:\nEnter answer as a decimal rounded to two places.";
 
         return problem_and_solution;
 }
