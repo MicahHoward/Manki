@@ -20,6 +20,7 @@ class MainFrame : public wxFrame
                 void OnBackButtonClicked(wxCommandEvent& evt);
                 void OnMySkillsButtonClicked(wxCommandEvent& evt);
                 void OnBrowserButtonClicked(wxCommandEvent& evt);
+                void OnLearntButtonClicked(wxCommandEvent& evt);
                 void OnTimedSkillsButtonClicked(wxCommandEvent& evt);
                 void OnTextChanged(wxCommandEvent& evt);
                 void OnTextEntered(wxCommandEvent& evt);

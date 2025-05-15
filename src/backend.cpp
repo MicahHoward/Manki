@@ -39,8 +39,6 @@ std::string return_spaceless_string(std::string input){
         return output;
 }
 
-
-
 int generate_latex_image(std::string expression)
 {
 	// Single class
@@ -51,7 +49,6 @@ int generate_latex_image(std::string expression)
 	latex.to_png(expression, "problem.png");
 
     std::cout << "made it past to_png\n";
-
 
 	// Convert to HTML, returns a HTML snippet
 	std::string html = latex.to_html(expression);
@@ -108,28 +105,28 @@ int get_skill_status(int skillID){
 
 int print_skill_info(int skillID){
         std::cout << std::endl << "print_skill_info section" << std::endl;
-        float currentStability = get_skill_value(skillID, "STABILITY");
-        float currentDifficulty = get_skill_value(skillID, "DIFFICULTY");
-        float currentRetrievability = get_skill_value(skillID, "RETRIEVABILITY");
-        float currentLastReviewTime = get_skill_value(skillID, "LAST_REVIEW_TIME");
+        float current_stability = get_skill_value(skillID, "STABILITY");
+        float current_difficulty = get_skill_value(skillID, "DIFFICULTY");
+        float current_retrievability = get_skill_value(skillID, "RETRIEVABILITY");
+        float current_last_review_time = get_skill_value(skillID, "LAST_REVIEW_TIME");
         std::cout << "For skillID " << std::to_string(skillID) << ":" << std::endl; 
-        std::cout << "Current stability = " << std::to_string(currentStability) << std::endl;
-        std::cout << "Current difficulty = " << std::to_string(currentDifficulty) << std::endl;
-        std::cout << "Current retrievability = " << std::to_string(currentRetrievability) << std::endl;
-        std::cout << "Current last review time = " << std::to_string(currentLastReviewTime) << std::endl;
+        std::cout << "Current stability = " << std::to_string(current_stability) << std::endl;
+        std::cout << "Current difficulty = " << std::to_string(current_difficulty) << std::endl;
+        std::cout << "Current retrievability = " << std::to_string(current_retrievability) << std::endl;
+        std::cout << "Current last review time = " << std::to_string(current_last_review_time) << std::endl;
         return 0;
 }
 
 std::string get_skill_info(int skillID){
-        float currentStability = get_skill_value(skillID, "STABILITY");
-        float currentDifficulty = get_skill_value(skillID, "DIFFICULTY");
-        float currentRetrievability = get_skill_value(skillID, "RETRIEVABILITY");
-        float currentLastReviewTime = get_skill_value(skillID, "LAST_REVIEW_TIME");
+        float current_stability = get_skill_value(skillID, "STABILITY");
+        float current_difficulty = get_skill_value(skillID, "DIFFICULTY");
+        float current_retrievability = get_skill_value(skillID, "RETRIEVABILITY");
+        float current_last_review_time = get_skill_value(skillID, "LAST_REVIEW_TIME");
         std::string skill_info = "For skillID " + std::to_string(skillID) + ":\n"; 
-        skill_info = skill_info + "Current stability = " + std::to_string(currentStability) + "\n";
-        skill_info = skill_info + "Current difficulty = " + std::to_string(currentDifficulty) + "\n";
-        skill_info = skill_info + "Current retrievability = " + std::to_string(currentRetrievability) + "\n";
-        skill_info = skill_info + "Current last review time = " + std::to_string(currentLastReviewTime) + "\n";
+        skill_info = skill_info + "Current stability = " + std::to_string(current_stability) + "\n";
+        skill_info = skill_info + "Current difficulty = " + std::to_string(current_difficulty) + "\n";
+        skill_info = skill_info + "Current retrievability = " + std::to_string(current_retrievability) + "\n";
+        skill_info = skill_info + "Current last review time = " + std::to_string(current_last_review_time) + "\n";
         return skill_info;
 }
 
@@ -292,103 +289,3 @@ std::string* generate_problem(int skillID)
         return problem_and_solution;
 
 }
-
-
-
-int practice_skills()
-{
-        int skillID;
-        std::string* problem_and_solution;
-        std::string operand;
-        std::cout << "What type of problem would you like?" << std::endl;
-        std::cout << "Please enter 1 for addition, 2 for subtraction, or 3 for multiplication." << std::endl;
-        std::cin >> skillID;
-
-        if(skillID == 1){
-                problem_and_solution = generate_subtraction_problem();
-        } else if(skillID == 2){
-                problem_and_solution = generate_subtraction_problem();
-        } else if(skillID == 3){
-                problem_and_solution = generate_multiplication_problem();
-        } else{
-                std::cout << "Please enter 1, 2, or 3." << std::endl;
-        }
-
-        float problem_and_solutionTime = get_skill_value(skillID, "PROBLEM_TIME");
-
-        std::string problem = problem_and_solution[0];
-        int solution = stoi(problem_and_solution[1]);
-
-        std::cout << problem << '\n';
-        std::cin >> user_response;
-
-        std::cout << user_response << std::endl;
-
-        int userGuess = -1;
-        try
-        {
-        userGuess = stoi(user_response);
-        }
-        catch(...){
-                std::cout << "Invalid response. Please give an actual number next time." << std::endl;
-                return 0;
-        }
-
-        if(userGuess == solution){
-                std::cout << "Correct!" << std::endl;
-                update_fsrs_on_answer(skillID, 3);
-        } else{
-                std::cout << "Incorrect!" << std::endl;
-                update_fsrs_on_answer(skillID, 1);
-        }
-
-        std::cout << "You guessed " << userGuess << " and the answer was " << solution << "." << std::endl;
-
-        print_skill_info(skillID);
-
-        return 0;
-
-}
-
-int old_main()
-{
-        bool willContinue = true;
-        initialize_database();
-        insert_default_values();
-        read_database();
-        update_retrievability();
-        read_database();
-
-        while(willContinue){
-                int option;
-                std::cout << "What would you like to do?" << std::endl << "Please enter:" << std::endl;
-                std::cout << "1 to practice a skill" << std::endl << "2 to read the database" << std::endl << "3 to read a specific skill" << std::endl << "4 to set a skill's timer" << std::endl << "5 to exit program" << std::endl;   
-                std::cin >> option;
-
-                if(option == 1){
-                        practice_skills();
-                } else if(option == 2){
-                        read_database();
-                } else if(option == 3){
-                        int skillID;
-                        std::cout << "What skill would you like to print?" << std::endl << "Please enter:" << std::endl << "1 for addition" << std::endl << "2 for subtraction" << std::endl << "3 for multiplication" << std::endl;
-                        std::cin >> skillID;
-                        print_skill_info(skillID);
-                } else if(option == 4){
-                        int skillID;
-                        int newProblemTime;
-                        std::cout << "What skill would you like to adjust the timer for?" << std::endl << "Please enter:" << std::endl << "1 for addition" << std::endl << "2 for subtraction" << std::endl << "3 for multiplication" << std::endl;
-                        std::cin >> skillID;
-                        std::cout << "What would you like to adjust the timer to?" << std::endl; 
-                        std::cin >> newProblemTime;
-                        update_skill_value(skillID, "PROBLEM_TIME", newProblemTime);
-
-                }else if(option == 5){
-                        willContinue = false;
-                }else{
-                        std::cout << "Please enter 1, 2, 3, 4, or 5." << std::endl;
-                } 
-        }
-        return 0;
-}
-
