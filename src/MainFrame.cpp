@@ -354,6 +354,7 @@ void MainFrame::OnTimer(wxTimerEvent&){
                 textEntry->Clear();
                 MainFrame::UpdateMainPanel();
                 main_book->SetSelection(last_selection);
+                problem_timer->Stop();
         } else{
                 wxMessageBox(wxT("The solution was \"" + solution + "\"."), "Incorrect!");
                 update_fsrs_on_answer(current_skill_id, 1);
@@ -490,6 +491,7 @@ void MainFrame::OnTextEntered(wxCommandEvent& evt) {
                 textEntry->Clear();
                 MainFrame::UpdateMainPanel();
                 main_book->SetSelection(last_selection);
+                problem_timer->Stop();
         } else{
                 wxMessageBox(wxT("The solution was \"" + solution + "\"."), "Incorrect!");
                 update_fsrs_on_answer(current_skill_id, 1);
