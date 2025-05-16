@@ -1,0 +1,33 @@
+#include <iostream>
+#include <random>
+using namespace std;
+
+/**
+ * Generates a string array that represents a triangular prism volume problem 
+ *
+ * @return Returns a string representing a triangular prism volume problem, a string representing the solution, and an empty notes string 
+ */
+string* generate_triangular_prism_volume_problem() 
+{
+        int min = 1;
+        int max = 100;
+
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_int_distribution<> distrib(min, max);
+
+        int base = distrib(gen);
+        int height = distrib(gen);
+        int length = distrib(gen);
+        double area = base * height/2.0;
+        double volume = area * length;
+
+        std::string notes = "";
+
+        string* problem_array = new string[3];
+        problem_array[0] = "b = " + to_string(base) + ", h = " + to_string(height)  + ", l = " + to_string(length) + ", A = ?";
+        problem_array[1] = to_string(volume);
+        problem_array[2] = notes;
+
+        return problem_array;
+}

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <chrono>
 #include "skills/addition.h"
 #include "skills/subtraction.h"
 #include "skills/multiplication.h"
@@ -20,6 +21,11 @@
 #include "skills/trig_deriv.h"
 #include "skills/pythagorean_theorem.h"
 #include "skills/partial_derivatives.h"
+#include "skills/cuboid_volume.h"
+#include "skills/triangular_prism_volume.h"
+#include "skills/cylinder_volume.h"
+#include "skills/sphere_volume.h"
+#include "skills/cone_volume.h"
 #include "db.h"
 #include "fsrs.h"
 #include "latexpp/latex.hpp"
@@ -209,6 +215,22 @@ std::string* generate_problem(int skill_id)
                 case 20:
                         problem_array = generate_partial_derivatives_problem();
                         break;
+                case 21:
+                        problem_array = generate_cuboid_volume_problem();
+                        break;
+                case 22:
+                        problem_array = generate_triangular_prism_volume_problem();
+                        break;
+                case 23:
+                        problem_array = generate_cylinder_volume_problem();
+                        break;
+                case 24:
+                        problem_array = generate_sphere_volume_problem();
+                        break;
+                case 25:
+                        problem_array = generate_cone_volume_problem();
+                        break;
+
 
                 default:
                         int base_skill_id = get_skill_value(skill_id, "BASE_SKILL_ID");
@@ -272,6 +294,21 @@ std::string* generate_problem(int skill_id)
                                         break;
                                 case 20:
                                         problem_array = generate_partial_derivatives_problem();
+                                        break;
+                                case 21:
+                                        problem_array = generate_cuboid_volume_problem();
+                                        break;
+                                case 22:
+                                        problem_array = generate_triangular_prism_volume_problem();
+                                        break;
+                                case 23:
+                                        problem_array = generate_cylinder_volume_problem();
+                                        break;
+                                case 24:
+                                        problem_array = generate_sphere_volume_problem();
+                                        break;
+                                case 25:
+                                        problem_array = generate_cone_volume_problem();
                                         break;
 
                                 default:

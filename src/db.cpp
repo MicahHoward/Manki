@@ -67,7 +67,12 @@ int insert_default_values()
                    "INSERT INTO SKILL VALUES(17, 'Integration Power Rule', 0, 0, 0, 0, 10, 'FALSE', 0.0, 0, 'Calculus');"
                    "INSERT INTO SKILL VALUES(18, 'Derivatives of Trigonometric Functions', 0, 0, 0, 0, 10, 'FALSE', 0.0, 0, 'Calculus');"
                    "INSERT INTO SKILL VALUES(19, 'Pythagorean Theorem', 0, 0, 0, 0, 10, 'FALSE', 0.0, 0, 'Geometry');"
-                   "INSERT INTO SKILL VALUES(20, 'Partial Derivatives', 0, 0, 0, 0, 10, 'FALSE', 0.0, 0, 'Calculus');");
+                   "INSERT INTO SKILL VALUES(20, 'Partial Derivatives', 0, 0, 0, 0, 10, 'FALSE', 0.0, 0, 'Calculus');"
+                   "INSERT INTO SKILL VALUES(21, 'Cuboid Volume', 0, 0, 0, 0, 10, 'FALSE', 0.0, 0, 'Geometry');"
+                   "INSERT INTO SKILL VALUES(22, 'Triangular Prism Volume', 0, 0, 0, 0, 10, 'FALSE', 0.0, 0, 'Geometry');"
+                   "INSERT INTO SKILL VALUES(23, 'Cylinder Volume', 0, 0, 0, 0, 10, 'FALSE', 0.0, 0, 'Geometry');"
+                   "INSERT INTO SKILL VALUES(24, 'Sphere Volume', 0, 0, 0, 0, 10, 'FALSE', 0.0, 0, 'Geometry');"
+                   "INSERT INTO SKILL VALUES(25, 'Cone Volume', 0, 0, 0, 0, 10, 'FALSE', 0.0, 0, 'Geometry');");
 
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);

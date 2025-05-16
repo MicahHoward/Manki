@@ -270,6 +270,13 @@ void MainFrame::RefreshPanels(){
 
         int number_of_skills = get_number_of_skills();
         std::cout << std::to_string(number_of_skills) + " is the number of skills returned\n";
+        due_arthimetic_win->DestroyChildren();
+        due_geometry_win->DestroyChildren();
+        due_algebra_win->DestroyChildren();
+        due_trigonometry_win->DestroyChildren();
+        due_linear_algebra_win->DestroyChildren();
+        due_calculus_win->DestroyChildren();
+
         learnt_win->DestroyChildren();
         not_retaining_win->DestroyChildren();
         timed_win->DestroyChildren();
