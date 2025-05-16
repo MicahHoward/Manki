@@ -1,26 +1,10 @@
 #include <sqlite3.h>
 #include <iostream>
 
-static int read_database_callback(void* data, int argc, char** argv, char** az_col_name)
-{
-        int i;
-        fprintf(stderr, "%s: ", (const char*)data);
-
-        for(i = 0; i < argc; i++){
-                printf("%s = %s\n", az_col_name[i], argv[i] ? argv[i] : "NULL");
-        }
-
-        printf("\n");
-        return 0;
-}
-
-int number_of_skills = 0;
-static int get_number_of_skills_callback(void* data, int argc, char** argv, char** az_col_name)
-{
-        number_of_skills++;
-        return 0;
-}
-
+/**
+ * Attempts to open "../data/manki.db" and create a table for skills in it.
+ * @return 0 on success, -1 on failure
+ */
 int initialize_database()
 {
         sqlite3* DB;
@@ -56,6 +40,10 @@ int initialize_database()
         return 0;
 }
 
+/**
+ * Inserts default values into SKILL table in "../data/manki.db"
+ * @return 0 on success, -1 on failure
+ */
 int insert_default_values()
 {
         sqlite3* DB;
@@ -101,6 +89,29 @@ int insert_default_values()
         return 0;
 }
 
+/**
+ * Callback function for read_database
+ *
+ * @return 0
+ */
+static int read_database_callback(void* data, int argc, char** argv, char** az_col_name)
+{
+        int i;
+        fprintf(stderr, "%s: ", (const char*)data);
+
+        for(i = 0; i < argc; i++){
+                printf("%s = %s\n", az_col_name[i], argv[i] ? argv[i] : "NULL");
+        }
+
+        printf("\n");
+        return 0;
+}
+
+/**
+ * Prints out all data in SKILL table in "../data/manki.db" 
+ *
+ * @return 0 on success, -1 on failure
+ */
 int read_database()
 {
         sqlite3* DB;
@@ -128,7 +139,22 @@ int read_database()
         sqlite3_close(DB);
         return 0;
 }
+// Global variable so that it can be shared between get_number_of_skills_callback and get_number_of_skills
+int number_of_skills = 0;
+/**
+ * Callback function for get_number_of_skills
+ */
+static int get_number_of_skills_callback(void* data, int argc, char** argv, char** az_col_name)
+{
+        number_of_skills++;
+        return 0;
+}
 
+/**
+ * Counts the number of skills in the SKILL table in "../data/manki.db"
+ *
+ * @return the number of skills found in the SKILL table
+ */
 int get_number_of_skills()
 {
         if(number_of_skills != 0){
@@ -155,13 +181,27 @@ int get_number_of_skills()
         return number_of_skills;
 }
 
+// Global variable so that it can be shared between get_skill_value_callback and get_skill_value
 float current_skill_value;
+
+/**
+ * Callback function for get_skill_value
+ *
+ * @return 0 
+ */
 static int get_skill_value_callback(void* data, int argc, char** argv, char** az_col_name)
 {
         current_skill_value = atof(argv[0]) ? atof(argv[0]) : -1;
         return 0;
 }
 
+/**
+ * Gets a decimal value from a specifed skill
+ *
+ * @param skill_id The id number for the skill to be accessed 
+ * @param attribute The attribute of the skill to be accessed
+ * @return The float for the specified value from the specified skill 
+ */
 float get_skill_value(int skill_id, std::string attribute)
 {
         sqlite3* DB;
@@ -189,13 +229,21 @@ float get_skill_value(int skill_id, std::string attribute)
 }
 
 // TODO: get_skill_name, get_skill_category, and get_skill_retaining should be placed with a text version of get_skill_value
+// Global variable to be shared between get_skill_name_callback and get_skill_name
 std::string current_skill_name;
+// Callback function for get_skill_name
 static int get_skill_name_callback(void* data, int argc, char** argv, char** az_col_name)
 {
         current_skill_name= argv[0];
         return 0;
 }
 
+/**
+ * Gets the text from the NAME attribute for a specified skill
+ *
+ * @param skill_id The id number for the skill to be accessed
+ * @return The string representing the NAME attribute
+ */
 std::string get_skill_name(int skill_id)
 {
         sqlite3* DB;
@@ -222,13 +270,22 @@ std::string get_skill_name(int skill_id)
         return intermediate_variable;
 }
 
+// Global variable to be shared between get_skill_category_callback and get_skill_category
 std::string current_skill_category;
+
+// Callback function for get_skill_category
 static int get_skill_category_callback(void* data, int argc, char** argv, char** az_col_name)
 {
         current_skill_category = argv[0];
         return 0;
 }
 
+/**
+ * Gets the CATEGORY attribute for a specified skill
+ *
+ * @param skill_id The id number for the skill to be accessed
+ * @return A string representing the CATEGORY attribute of the accessed skill
+ */
 std::string get_skill_category(int skill_id)
 {
         sqlite3* DB;
@@ -255,13 +312,22 @@ std::string get_skill_category(int skill_id)
         return intermediate_variable;
 }
 
+// Global variable to be shared between get_skill_retaining_callback and get_skill_retaining
 std::string current_skill_retaining;
+
+// Callback function for get_skill_retaining
 static int get_skill_retaining_callback(void* data, int argc, char** argv, char** az_col_retaining)
 {
         current_skill_retaining = argv[0];
         return 0;
 }
 
+/**
+ * Gets the RETAINING attribute for a specified skill
+ *
+ * @param skill_id The id number for the skill to be accessed
+ * @return A string representing the RETAINING attribute of the accessed skill
+ */
 std::string get_skill_retaining(int skill_id)
 {
         sqlite3* DB;
@@ -288,6 +354,11 @@ std::string get_skill_retaining(int skill_id)
         return intermediate_variable;
 }
 
+/**
+ * Gets a list of skill names by calling get_number_of_skills on all utilized ids
+ *
+ * @return A pointer to an array of skill names
+ */
 std::string* get_skill_names(){
             int number_of_skills = get_number_of_skills();
             std::string* skill_names = new std::string[number_of_skills];
@@ -297,6 +368,14 @@ std::string* get_skill_names(){
             return skill_names;
 }
 
+/**
+ * Updates a specified numerical attribute for a specified skill to a new value
+ *
+ * @param skill_id The id number specifying which skill to update
+ * @param attribute A string specifiying which attribute of the skill to update
+ * @param new_value A float for the updated value of that skill
+ * @return 0 on success, -1 on failure
+ */
 int update_skill_value(int skill_id, std::string attribute, float new_value)
 {
         sqlite3* DB;
@@ -320,6 +399,15 @@ int update_skill_value(int skill_id, std::string attribute, float new_value)
         sqlite3_close(DB);
         return 0;
 }
+
+/**
+ * Updates a specified text attribute for a specified skill to a new value
+ *
+ * @param skill_id The id number specifying which skill to update
+ * @param attribute A string specifiying which attribute of the skill to update
+ * @param new_value A string for the updated value of that skill
+ * @return 0 on success, -1 on failure
+ */
 int update_skill_value(int skill_id, std::string attribute, std::string new_value)
 {
         sqlite3* DB;
@@ -348,6 +436,13 @@ int update_skill_value(int skill_id, std::string attribute, std::string new_valu
         return 0;
 }
 
+/**
+ * Inserts a new timed version of skill into the database
+ *
+ * @param base_skill_id The id number for the non-timed version of the skill
+ * @param time_in_milliseconds The time limit for the timed skill in milliseconds
+ * @return On success, the id number for the new skill; on failure, -1
+ */
 int insert_timed_skill(int base_skill_id, int time_in_milliseconds)
 {
         sqlite3* DB;
