@@ -1,13 +1,13 @@
 #include <sqlite3.h>
 #include <iostream>
 
-static int callback(void* data, int argc, char** argv, char** azColName)
+static int callback(void* data, int argc, char** argv, char** az_col_name)
 {
         int i;
         fprintf(stderr, "%s: ", (const char*)data);
 
         for(i = 0; i < argc; i++){
-                printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+                printf("%s = %s\n", az_col_name[i], argv[i] ? argv[i] : "NULL");
         }
 
         printf("\n");
@@ -15,7 +15,7 @@ static int callback(void* data, int argc, char** argv, char** azColName)
 }
 
 int numberOfSkills = 0;
-static int get_number_of_skills_callback(void* data, int argc, char** argv, char** azColName)
+static int get_number_of_skills_callback(void* data, int argc, char** argv, char** az_col_name)
 {
         numberOfSkills++;
         return 0;
@@ -54,9 +54,6 @@ int initialize_database()
                 std::cerr << "Error creating table!" << std::endl;
                 sqlite3_free(message_error);
         } 
-        //else{
-        //        std::cout << "Table created succesfully!" << std::endl;
-        //}
 
         sqlite3_close(DB);
         return 0;
@@ -94,9 +91,6 @@ int insert_default_values()
                 std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
                 return -1;
         } 
-        //else{
-        //        std::cout << "DB opened successfully!" << std::endl;
-        //}
 
         exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &message_error);
         if(exit != SQLITE_OK){
@@ -154,37 +148,31 @@ int get_number_of_skills()
                 std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
                 return -1;
         } 
-        //else{
-         //       std::cout << "DB opened successfully!" << std::endl;
-        //}
 
         exit = sqlite3_exec(DB, sql.c_str(), get_number_of_skills_callback, (void*)data.c_str(), NULL);
         if(exit != SQLITE_OK){
                 std::cerr << "Error selecting!" << std::endl;
                 return -1;
         } 
-        //else{
-         //       std::cout << "Selection completed!" << std::endl;
-        //}
         sqlite3_close(DB);
         return numberOfSkills;
 }
 
-float currentSkillValue;
-static int get_skill_value_callback(void* data, int argc, char** argv, char** azColName)
+float current_skill_value;
+static int get_skill_value_callback(void* data, int argc, char** argv, char** az_col_name)
 {
-        currentSkillValue = atof(argv[0]) ? atof(argv[0]) : -1;
+        current_skill_value = atof(argv[0]) ? atof(argv[0]) : -1;
         return 0;
 }
 
-float get_skill_value(int skillID, std::string attribute)
+float get_skill_value(int skill_id, std::string attribute)
 {
         sqlite3* DB;
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);
         std::string data("CALLBACK FUNCTION");
 
-        std::string sql("SELECT " + attribute + " FROM SKILL WHERE ID = " + std::to_string(skillID) + ";");
+        std::string sql("SELECT " + attribute + " FROM SKILL WHERE ID = " + std::to_string(skill_id) + ";");
 
         if(exit){
                 std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
@@ -197,7 +185,7 @@ float get_skill_value(int skillID, std::string attribute)
                 return -1;
         } 
   
-        float intermediate_variable = currentSkillValue;
+        float intermediate_variable = current_skill_value;
 
         sqlite3_close(DB);
         return intermediate_variable;
@@ -205,20 +193,20 @@ float get_skill_value(int skillID, std::string attribute)
 
 // TODO: get_skill_name, get_skill_category, and get_skill_retaining should be placed with a text version of get_skill_value
 std::string current_skill_name;
-static int get_skill_name_callback(void* data, int argc, char** argv, char** azColName)
+static int get_skill_name_callback(void* data, int argc, char** argv, char** az_col_name)
 {
         current_skill_name= argv[0];
         return 0;
 }
 
-std::string get_skill_name(int skillID)
+std::string get_skill_name(int skill_id)
 {
         sqlite3* DB;
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);
         std::string data("CALLBACK FUNCTION");
 
-        std::string sql("SELECT NAME FROM SKILL WHERE ID = " + std::to_string(skillID) + ";");
+        std::string sql("SELECT NAME FROM SKILL WHERE ID = " + std::to_string(skill_id) + ";");
 
         if(exit){
                 std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
@@ -238,20 +226,20 @@ std::string get_skill_name(int skillID)
 }
 
 std::string current_skill_category;
-static int get_skill_category_callback(void* data, int argc, char** argv, char** azColName)
+static int get_skill_category_callback(void* data, int argc, char** argv, char** az_col_name)
 {
         current_skill_category = argv[0];
         return 0;
 }
 
-std::string get_skill_category(int skillID)
+std::string get_skill_category(int skill_id)
 {
         sqlite3* DB;
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);
         std::string data("CALLBACK FUNCTION");
 
-        std::string sql("SELECT CATEGORY FROM SKILL WHERE ID = " + std::to_string(skillID) + ";");
+        std::string sql("SELECT CATEGORY FROM SKILL WHERE ID = " + std::to_string(skill_id) + ";");
 
         if(exit){
                 std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
@@ -270,21 +258,21 @@ std::string get_skill_category(int skillID)
         return intermediate_variable;
 }
 
-std::string currentSkillRetaining;
-static int get_skill_retaining_callback(void* data, int argc, char** argv, char** azColRetaining)
+std::string current_skill_retaining;
+static int get_skill_retaining_callback(void* data, int argc, char** argv, char** az_col_retaining)
 {
-        currentSkillRetaining= argv[0];
+        current_skill_retaining = argv[0];
         return 0;
 }
 
-std::string get_skill_retaining(int skillID)
+std::string get_skill_retaining(int skill_id)
 {
         sqlite3* DB;
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);
         std::string data("CALLBACK FUNCTION");
 
-        std::string sql("SELECT RETAINING FROM SKILL WHERE ID = " + std::to_string(skillID) + ";");
+        std::string sql("SELECT RETAINING FROM SKILL WHERE ID = " + std::to_string(skill_id) + ";");
 
         if(exit){
                 std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
@@ -297,12 +285,11 @@ std::string get_skill_retaining(int skillID)
                 return "";
         } 
   
-        std::string intermediate_variable = currentSkillRetaining;
+        std::string intermediate_variable = current_skill_retaining;
 
         sqlite3_close(DB);
         return intermediate_variable;
 }
-
 
 std::string* get_skill_names(){
             int number_of_skills = get_number_of_skills();
@@ -313,12 +300,11 @@ std::string* get_skill_names(){
             return skill_names;
 }
 
-int update_skill_value(int skillID, std::string attribute, float newValue)
+int update_skill_value(int skill_id, std::string attribute, float new_value)
 {
         sqlite3* DB;
         char* message_error;
-        std::string sql("UPDATE SKILL SET " + attribute + " = '" + std::to_string(newValue) + "' WHERE ID = " + std::to_string(skillID) + ";");
-
+        std::string sql("UPDATE SKILL SET " + attribute + " = '" + std::to_string(new_value) + "' WHERE ID = " + std::to_string(skill_id) + ";");
 
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);
@@ -327,9 +313,6 @@ int update_skill_value(int skillID, std::string attribute, float newValue)
                 std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
                 return -1;
         } 
-        //else{
-        //       std::cout << "DB opened successfully!" << std::endl;
-        //}
 
         exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &message_error);
         if(exit != SQLITE_OK){
@@ -340,12 +323,11 @@ int update_skill_value(int skillID, std::string attribute, float newValue)
         sqlite3_close(DB);
         return 0;
 }
-int update_skill_value(int skillID, std::string attribute, std::string newValue)
+int update_skill_value(int skill_id, std::string attribute, std::string new_value)
 {
         sqlite3* DB;
         char* message_error;
-        std::string sql("UPDATE SKILL SET " + attribute + " = '" + newValue + "' WHERE ID = " + std::to_string(skillID) + ";");
-
+        std::string sql("UPDATE SKILL SET " + attribute + " = '" + new_value + "' WHERE ID = " + std::to_string(skill_id) + ";");
 
         int exit = 0;
         exit = sqlite3_open("../data/manki.db", &DB);
@@ -386,9 +368,6 @@ int insert_timed_skill(int base_skill_id, int time_in_milliseconds)
                 std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
                 return -1;
         } 
-        //else{
-        //        std::cout << "DB opened successfully!" << std::endl;
-        //}
 
         exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &message_error);
         if(exit != SQLITE_OK){

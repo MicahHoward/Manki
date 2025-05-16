@@ -55,61 +55,61 @@ int generate_latex_image(std::string expression)
     return 0;
 }
 
-int update_fsrs_on_answer(int skillID, int grade)
+int update_fsrs_on_answer(int skill_id, int grade)
 {
         auto now = std::chrono::system_clock::now();
-        time_t reviewTime = std::chrono::system_clock::to_time_t(now);
+        time_t review_time = std::chrono::system_clock::to_time_t(now);
 
-        float currentStability = get_skill_value(skillID, "STABILITY");
-        float currentDifficulty = get_skill_value(skillID, "DIFFICULTY");
-        float currentRetrievability = get_skill_value(skillID, "RETRIEVABILITY");
+        float current_stability = get_skill_value(skill_id, "STABILITY");
+        float current_difficulty = get_skill_value(skill_id, "DIFFICULTY");
+        float current_retrievability = get_skill_value(skill_id, "RETRIEVABILITY");
         
-        if(currentStability == -1){
-                initialize_stability(skillID, grade);
-                currentStability = get_skill_value(skillID, "STABILITY");
+        if(current_stability == -1){
+                initialize_stability(skill_id, grade);
+                current_stability = get_skill_value(skill_id, "STABILITY");
         } else if(grade == 3){
-                update_stability_after_recall(skillID, grade, currentDifficulty, currentStability, currentRetrievability);
+                update_stability_after_recall(skill_id, grade, current_difficulty, current_stability, current_retrievability);
         } else if(grade == 1){
-                update_stability_after_lapse(skillID, currentDifficulty, currentStability, currentRetrievability);
+                update_stability_after_lapse(skill_id, current_difficulty, current_stability, current_retrievability);
         } else{
                 std::cout << "Invalid grade inputted to update_fsrs_on_answer" << std::endl;
         }
 
-        if(currentDifficulty == -1){
-                initialize_difficulty(skillID, grade);
-                currentDifficulty = get_skill_value(skillID, "DIFFICULTY");
+        if(current_difficulty == -1){
+                initialize_difficulty(skill_id, grade);
+                current_difficulty = get_skill_value(skill_id, "DIFFICULTY");
         } else{
-                update_difficulty(skillID, currentDifficulty, grade);
+                update_difficulty(skill_id, current_difficulty, grade);
         }
 
-        update_last_review_time(skillID, std::to_string(reviewTime));
+        update_last_review_time(skill_id, std::to_string(review_time));
         if(grade == 3){
-                update_retrievability_on_review(skillID);
+                update_retrievability_on_review(skill_id);
         }
         return 0;
 }
 
 
-int get_skill_status(int skillID){
-        float currentRetrievability = get_skill_value(skillID, "RETRIEVABILITY");
-        if(currentRetrievability >= 0.90){
+int get_skill_status(int skill_id){
+        float current_retrievability = get_skill_value(skill_id, "RETRIEVABILITY");
+        if(current_retrievability >= 0.90){
                 // The int get_skill_status returns indicates which collapsible pane the skill should be in.
                 // 0 for due, 1 for not due, 2 for not learnt
                 return 1;
-        } else if(currentRetrievability == -1){
+        } else if(current_retrievability == -1){
                 return 2;
         } else{
                 return 0;
         }
 }
 
-int print_skill_info(int skillID){
+int print_skill_info(int skill_id){
         std::cout << std::endl << "print_skill_info section" << std::endl;
-        float current_stability = get_skill_value(skillID, "STABILITY");
-        float current_difficulty = get_skill_value(skillID, "DIFFICULTY");
-        float current_retrievability = get_skill_value(skillID, "RETRIEVABILITY");
-        float current_last_review_time = get_skill_value(skillID, "LAST_REVIEW_TIME");
-        std::cout << "For skillID " << std::to_string(skillID) << ":" << std::endl; 
+        float current_stability = get_skill_value(skill_id, "STABILITY");
+        float current_difficulty = get_skill_value(skill_id, "DIFFICULTY");
+        float current_retrievability = get_skill_value(skill_id, "RETRIEVABILITY");
+        float current_last_review_time = get_skill_value(skill_id, "LAST_REVIEW_TIME");
+        std::cout << "For skill_id " << std::to_string(skill_id) << ":" << std::endl; 
         std::cout << "Current stability = " << std::to_string(current_stability) << std::endl;
         std::cout << "Current difficulty = " << std::to_string(current_difficulty) << std::endl;
         std::cout << "Current retrievability = " << std::to_string(current_retrievability) << std::endl;
@@ -117,12 +117,12 @@ int print_skill_info(int skillID){
         return 0;
 }
 
-std::string get_skill_info(int skillID){
-        float current_stability = get_skill_value(skillID, "STABILITY");
-        float current_difficulty = get_skill_value(skillID, "DIFFICULTY");
-        float current_retrievability = get_skill_value(skillID, "RETRIEVABILITY");
-        float current_last_review_time = get_skill_value(skillID, "LAST_REVIEW_TIME");
-        std::string skill_info = "For skillID " + std::to_string(skillID) + ":\n"; 
+std::string get_skill_info(int skill_id){
+        float current_stability = get_skill_value(skill_id, "STABILITY");
+        float current_difficulty = get_skill_value(skill_id, "DIFFICULTY");
+        float current_retrievability = get_skill_value(skill_id, "RETRIEVABILITY");
+        float current_last_review_time = get_skill_value(skill_id, "LAST_REVIEW_TIME");
+        std::string skill_info = "For skill_id " + std::to_string(skill_id) + ":\n"; 
         skill_info = skill_info + "Current stability = " + std::to_string(current_stability) + "\n";
         skill_info = skill_info + "Current difficulty = " + std::to_string(current_difficulty) + "\n";
         skill_info = skill_info + "Current retrievability = " + std::to_string(current_retrievability) + "\n";
@@ -152,10 +152,10 @@ std::string timed_input(int timeout_seconds) {
         }
 }
 
-std::string* generate_problem(int skillID)
+std::string* generate_problem(int skill_id)
 {
         std::string* problem_and_solution = new std::string[2]; 
-        switch (skillID){
+        switch (skill_id){
                 case 1:
                         problem_and_solution = generate_addition_problem();
                         break;
@@ -218,7 +218,7 @@ std::string* generate_problem(int skillID)
                         break;
 
                 default:
-                        int base_skill_id = get_skill_value(skillID, "BASE_SKILL_ID");
+                        int base_skill_id = get_skill_value(skill_id, "BASE_SKILL_ID");
                         switch (base_skill_id){
                                 case 1:
                                         problem_and_solution = generate_addition_problem();
@@ -282,10 +282,9 @@ std::string* generate_problem(int skillID)
                                         break;
 
                                 default:
-                                        throw std::invalid_argument("generate problem received invalid skillID");
+                                        throw std::invalid_argument("generate problem received invalid skill_id");
                                         break;
                         }
         }
         return problem_and_solution;
-
 }
