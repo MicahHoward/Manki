@@ -1,6 +1,11 @@
 #include <iostream>
 #include <random>
 
+/**
+ * Generates a string array that represents an addition problem
+ *
+ * @return Returns a string representing an addition problem, a string representing the solution, and an empty notes string
+ */
 std::string* generate_addition_problem() 
 {
         int min = 1;
@@ -16,10 +21,10 @@ std::string* generate_addition_problem()
 
         std::string problem = std::to_string(first_number) + " + " + std::to_string(second_number) + " = ?";
         std::string solution = std::to_string(sum);
-        std::string* returnValue = new std::string[3];
-        returnValue[0] = problem;
-        returnValue[1] = solution;
-        returnValue[2] = "";
+        std::string* return_value = new std::string[3];
+        return_value[0] = problem;
+        return_value[1] = solution;
+        return_value[2] = "";
 
-        return returnValue;
+        return return_value;
 }

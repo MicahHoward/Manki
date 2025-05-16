@@ -4,6 +4,11 @@
 #include "../utils.h"
 using namespace std;
 
+/**
+ * Generates a string array that represents a circle area problem
+ *
+ * @return Returns a string representing a circle area problem, a string representing the solution, and anotes string that specifies answer formatting
+ */
 string* generate_circle_area_problem() 
 {
         int min = 1;

@@ -2,6 +2,11 @@
 #include <random>
 using namespace std;
 
+/**
+ * Generates a string array that represents a triangle area problem 
+ *
+ * @return Returns a string representing a triangle area problem, a string representing the solution, and an empty notes string 
+ */
 string* generate_triangle_area_problem() 
 {
         int min = 1;
@@ -15,10 +20,12 @@ string* generate_triangle_area_problem()
         int height = distrib(gen);
         double area = base * height/2.0;
 
-        string* problem_and_solution = new string[3];
-        problem_and_solution[0] = "b = " + to_string(base) + ", h =" + to_string(height) + ", A = ?";
-        problem_and_solution[1] = to_string(area);
-        problem_and_solution[2] = "";
+        std::string notes = "";
 
-        return problem_and_solution;
+        string* problem_array = new string[3];
+        problem_array[0] = "b = " + to_string(base) + ", h =" + to_string(height) + ", A = ?";
+        problem_array[1] = to_string(area);
+        problem_array[2] = notes;
+
+        return problem_array;
 }

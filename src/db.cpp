@@ -1,7 +1,7 @@
 #include <sqlite3.h>
 #include <iostream>
 
-static int callback(void* data, int argc, char** argv, char** az_col_name)
+static int read_database_callback(void* data, int argc, char** argv, char** az_col_name)
 {
         int i;
         fprintf(stderr, "%s: ", (const char*)data);
@@ -14,10 +14,10 @@ static int callback(void* data, int argc, char** argv, char** az_col_name)
         return 0;
 }
 
-int numberOfSkills = 0;
+int number_of_skills = 0;
 static int get_number_of_skills_callback(void* data, int argc, char** argv, char** az_col_name)
 {
-        numberOfSkills++;
+        number_of_skills++;
         return 0;
 }
 
@@ -43,9 +43,6 @@ int initialize_database()
                 std::cerr << "Error opening DB " << sqlite3_errmsg(DB) << std::endl; 
                 return -1;
         } 
-        //else{
-        //       std::cout << "DB opened successfully!" << std::endl;
-        //}
         
         char* message_error;
         sqlite3_exec(DB, sql.c_str(), NULL, 0, &message_error);  
@@ -120,7 +117,7 @@ int read_database()
                 std::cout << "DB opened successfully!" << std::endl;
         }
 
-        exit = sqlite3_exec(DB, sql.c_str(), callback, (void*)data.c_str(), NULL);
+        exit = sqlite3_exec(DB, sql.c_str(), read_database_callback, (void*)data.c_str(), NULL);
         if(exit != SQLITE_OK){
                 std::cerr << "Error selecting!" << std::endl;
                 return -1;
@@ -134,8 +131,8 @@ int read_database()
 
 int get_number_of_skills()
 {
-        if(numberOfSkills != 0){
-                return numberOfSkills;
+        if(number_of_skills != 0){
+                return number_of_skills;
         }
         sqlite3* DB;
         int exit = 0;
@@ -155,7 +152,7 @@ int get_number_of_skills()
                 return -1;
         } 
         sqlite3_close(DB);
-        return numberOfSkills;
+        return number_of_skills;
 }
 
 float current_skill_value;

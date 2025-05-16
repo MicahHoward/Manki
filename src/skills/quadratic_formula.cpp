@@ -4,6 +4,11 @@
 #include <math.h>
 #include "../utils.h"
 
+/**
+ * Generates a string array that represents a quadratic formula problem 
+ *
+ * @return Returns a string representing a quadratic formula problem, a string representing the solution, and an empty notes string 
+ */
 std::string* generate_quadratic_formula_problem() 
 {
         int min = 1;
@@ -34,10 +39,12 @@ std::string* generate_quadratic_formula_problem()
                 solution = solution + return_rounded_number_string(std::to_string(xtwo.real()))  + " + " + return_rounded_number_string(std::to_string(xtwo.imag()))+ "i";
         }
         std::cout << solution + "\n";
-        std::string* returnValue = new std::string[3];
-        returnValue[0] = problem;
-        returnValue[1] = solution;
-        returnValue[2] = "";
 
-        return returnValue;
+        std::string notes = "";
+        std::string* problem_array = new std::string[3];
+        problem_array[0] = problem;
+        problem_array[1] = solution;
+        problem_array[2] = notes;
+
+        return problem_array;
 }

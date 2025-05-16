@@ -2,6 +2,11 @@
 #include <random>
 using namespace std;
 
+/**
+ * Generates a string array that represents a subtraction problem
+ *
+ * @return Returns a string representing a subtraction problem, a string representing the solution, and an empty notes string
+ */
 string* generate_subtraction_problem() 
 {
         int min = 1;

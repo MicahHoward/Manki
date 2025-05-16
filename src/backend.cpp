@@ -1,7 +1,4 @@
 #include <iostream>
-#include <chrono>
-#include <future>
-#include <thread>
 #include <cmath>
 #include "skills/addition.h"
 #include "skills/subtraction.h"
@@ -26,8 +23,6 @@
 #include "db.h"
 #include "fsrs.h"
 #include "latexpp/latex.hpp"
-
-std::string user_response;
 
 std::string return_spaceless_string(std::string input){
         std::string output = "";
@@ -128,28 +123,6 @@ std::string get_skill_info(int skill_id){
         skill_info = skill_info + "Current retrievability = " + std::to_string(current_retrievability) + "\n";
         skill_info = skill_info + "Current last review time = " + std::to_string(current_last_review_time) + "\n";
         return skill_info;
-}
-
-void user_guess(std::stop_token stoken){
-        std::stop_callback callBack (stoken, [] {
-                user_response = "Ran out of time!";                    
-        });
-        std::cin >> user_response;
-}
-
-std::string timed_input(int timeout_seconds) {
-        std::string input_string;
-        auto future = async(std::launch::async, [&]() {
-                getline(std::cin, input_string);
-                return input_string;
-        });
-
-        auto result = future.wait_for(std::chrono::seconds(10));
-        if (result == std::future_status::timeout){
-                return "";
-        } else {
-                return future.get();
-        }
 }
 
 std::string* generate_problem(int skill_id)

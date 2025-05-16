@@ -1,6 +1,11 @@
 #include <iostream>
 #include <random>
 
+/**
+ * Generates a string array that represents a trigonometric functions derivatives problem 
+ *
+ * @return Returns a string representing a trigonometric functions derivatives problem, a string representing the solution, and an empty notes string 
+ */
 std::string* generate_trig_deriv_problem() 
 {
         int min = 1;
@@ -17,10 +22,12 @@ std::string* generate_trig_deriv_problem()
 
         std::string problem = trig_functions[index-1];
         std::string solution = trig_functions_derivatives[index-1];
-        std::string* returnValue = new std::string[3];
-        returnValue[0] = problem;
-        returnValue[1] = solution;
-        returnValue[2] = "";
+        std::string notes = "";
 
-        return returnValue;
+        std::string* problem_array = new std::string[3];
+        problem_array[0] = problem;
+        problem_array[1] = solution;
+        problem_array[2] = notes; 
+
+        return problem_array;
 }

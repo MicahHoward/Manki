@@ -1,6 +1,11 @@
 #include <iostream>
 #include <random>
 
+/**
+ * Generates a string array that represents a derivation product rule problem
+ *
+ * @return Returns a string representing a derivation power rule problem, a string representing the solution, and an empty notes string 
+ */
 std::string* generate_product_rule_problem() 
 {
         int min = 1;
@@ -33,11 +38,12 @@ std::string* generate_product_rule_problem()
                         std::to_string(second_half_of_product_coefficient) + "x^" + std::to_string(second_half_of_product_power);
         }
         std::string problem = std::to_string(first_coefficient) + "x^{" + std::to_string(first_power) + "}\\times" + std::to_string(second_coefficient) + "x^{" + std::to_string(second_power) + "}";
+        std::string notes = "";
 
-        std::string* returnValue = new std::string[3];
-        returnValue[0] = problem;
-        returnValue[1] = solution;
-        returnValue[2] = "";
+        std::string* problem_array = new std::string[3];
+        problem_array[0] = problem;
+        problem_array[1] = solution;
+        problem_array[2] = notes;
 
-        return returnValue;
+        return problem_array;
 }
