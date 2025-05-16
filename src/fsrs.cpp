@@ -10,6 +10,13 @@ using namespace std;
 // Default parameters for FSRS
 float weights[19] = {0.40255, 1.18385, 3.173, 15.69105, 7.1949, 0.5345, 1.4604, 0.0046, 1.54575, 0.1192, 1.01925, 1.9395, 0.11, 0.29605, 2.2698, 0.2315, 2.9898, 0.51655, 0.6621};
 
+/**
+ * Updates stability after same day review for specified skill and difficulty grade
+ *
+ * @param skill_id The id number for the skill to be updated
+ * @param grade The difficulty grade (i.e whether or not the user got it correct)
+ * return 0
+ */
 int update_stablity_after_same_day_review(int skill_id, int grade)
 {
         float old_stability = get_skill_value(skill_id, "STABILITY");
@@ -19,6 +26,16 @@ int update_stablity_after_same_day_review(int skill_id, int grade)
         return 0;
 }
 
+/**
+ * Updates stability after recall for specified skill and difficulty grade
+ *
+ * @param skill_id The id number for the skill to be updated
+ * @param grade The difficulty grade
+ * @param difficulty The difficulty attribute of the skill
+ * @param stability The old stability attribute of the skill
+ * @param retrievability The retrievability attribute of the skill
+ * return 0
+ */
 int update_stability_after_recall(int skill_id, int grade, float difficulty, float stability, float retrievability)
 {
         float grade_factor;
@@ -34,6 +51,15 @@ int update_stability_after_recall(int skill_id, int grade, float difficulty, flo
         return 0; 
 }
 
+/**
+ * Updates stability after lapse for specified skill 
+ *
+ * @param skill_id The id number for the skill to be updated
+ * @param difficulty The difficulty attribute of the skill
+ * @param stability The old stability attribute of the skill
+ * @param retrievability The retrievability attribute of the skill
+ * return 0
+ */
 int update_stability_after_lapse(int skill_id, float difficulty, float stability, float retrievability)
 {
         float new_stability = weights[11] * pow(difficulty, -weights[12]) * (pow(stability + 1, weights[13]) - 1) * (exp(weights[14] * (1 - retrievability))); 
@@ -41,6 +67,14 @@ int update_stability_after_lapse(int skill_id, float difficulty, float stability
         return 0;
 }
 
+/**
+ * Updates difficulty after review attempt for specified skill 
+ *
+ * @param skill_id The id number for the skill to be updated
+ * @param difficulty The difficulty attribute of the skill
+ * @param grade The difficulty grade for the attempt
+ * return 0
+ */
 int update_difficulty(int skill_id, float difficulty, int grade)
 {
         float new_difficulty = difficulty + (-weights[6] * (grade-3)) * ((10-difficulty)/9);
@@ -48,6 +82,13 @@ int update_difficulty(int skill_id, float difficulty, int grade)
         return 0;
 }
 
+/**
+ * Updates last_review_time after review attempt for specified skill 
+ *
+ * @param skill_id The id number for the skill to be updated
+ * @param review_time String representing the new LAST_REVIEW_TIME value
+ * return 0
+ */
 int update_last_review_time(int skill_id, string review_time)
 {
         update_skill_value(skill_id, "LAST_REVIEW_TIME", review_time);
@@ -55,6 +96,12 @@ int update_last_review_time(int skill_id, string review_time)
 }
 
 // time is the number of days since last review
+//
+/**
+ * Updates retrievability for all skills based off differene between current time and last review time 
+ *
+ * return 0
+ */
 int update_retrievability()
 {
         int number_of_skills = get_number_of_skills();
@@ -70,6 +117,12 @@ int update_retrievability()
         return 0;
 }
 
+/**
+ * Updates retrievability for specified skill after succesful review 
+ *
+ * @param skill_id The id number for the skill to be updated
+ * @return 0
+ */
 int update_retrievability_on_review(int skill_id)
 {
         float time = 0;  
@@ -79,6 +132,13 @@ int update_retrievability_on_review(int skill_id)
         return 0;
 }
 
+/**
+ * Intializes difficulty for specified skill based off of FSRS weights and first difficulty grade
+ *
+ * @param skill_id The id number for the skill to be updated
+ * @param grade The difficulty grade (i.e whether or not the user got it correct)
+ * @return 0
+ */
 int initialize_difficulty(int skill_id, int grade)
 {
         float initial_difficulty = weights[4] - exp(weights[5] * (grade - 1)) + 1;
@@ -86,6 +146,13 @@ int initialize_difficulty(int skill_id, int grade)
         return 0;
 }
 
+/**
+ * Intializes stability for specified skill based off of FSRS weights and first difficulty grade
+ *
+ * @param skill_id The id number for the skill to be updated
+ * @param grade The difficulty grade (i.e whether or not the user got it correct)
+ * @return 0
+ */
 int initialize_stability(int skill_id, int grade)
 {
         float initial_stability = weights[grade];
@@ -93,6 +160,13 @@ int initialize_stability(int skill_id, int grade)
         return 0;
 }
 
+/**
+ * Gets the number of days before the next time a skill is due
+ *
+ * @param desired_retrievability The retrievability below which review is required
+ * @param stability The current stability of a skill
+ * @return The float number of days until a skill is due
+ */
 float get_next_interval(float desired_retrievability, float stability)
 {
         return (stability/(19.0/81.0))*(pow(desired_retrievability,((1/-0.5)-1)));

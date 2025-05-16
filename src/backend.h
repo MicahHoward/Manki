@@ -1,7 +1,6 @@
 #pragma once
 
 std::string return_spaceless_string(std::string input);
-int generate_latex_image(std::string expression);
 int update_fsrs_on_answer(int skillID, int grade);
 int print_skill_info(int skillID);
 std::string get_skill_info(int skillID);

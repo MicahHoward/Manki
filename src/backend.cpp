@@ -24,6 +24,12 @@
 #include "fsrs.h"
 #include "latexpp/latex.hpp"
 
+/**
+ * Returns a version of the input string with all spaces removed. Used in comparing user guesses with correct answers
+ *
+ * @param input The string from which to remove spaces
+ * @return The input string with spaces removed
+ */
 std::string return_spaceless_string(std::string input){
         std::string output = "";
         for(int i = 0; i < input.size(); i++){
@@ -34,22 +40,13 @@ std::string return_spaceless_string(std::string input){
         return output;
 }
 
-int generate_latex_image(std::string expression)
-{
-	// Single class
-	Latex latex;
-
-	// Convert to PNG, store in 'problem.png'
-    std::cout << "made it to to_png\n";
-	latex.to_png(expression, "problem.png");
-
-    std::cout << "made it past to_png\n";
-
-	// Convert to HTML, returns a HTML snippet
-	std::string html = latex.to_html(expression);
-    return 0;
-}
-
+/**
+ * Updates stability, difficulty, and retrievability for a skill based off of whether or not the user guessed correctly
+ *
+ * @param skill_id The id number for the skill to be updated
+ * @param grade An integer representing whether or not the user got the solution correctly
+ * @return 0
+ */
 int update_fsrs_on_answer(int skill_id, int grade)
 {
         auto now = std::chrono::system_clock::now();
@@ -84,7 +81,12 @@ int update_fsrs_on_answer(int skill_id, int grade)
         return 0;
 }
 
-
+/**
+ * Determines whether or not the skill is due or not
+ *
+ * @param skill_id The id number for the skill to be updated
+ * @return 0 for due, 1 for learnt, 2 for not learnt
+ */
 int get_skill_status(int skill_id){
         float current_retrievability = get_skill_value(skill_id, "RETRIEVABILITY");
         if(current_retrievability >= 0.90){
@@ -98,6 +100,12 @@ int get_skill_status(int skill_id){
         }
 }
 
+/**
+ * Prints to console attributes of specified skill
+ *
+ * @param skill_id The id number for the skill to be updated
+ * @return 0
+ */
 int print_skill_info(int skill_id){
         std::cout << std::endl << "print_skill_info section" << std::endl;
         float current_stability = get_skill_value(skill_id, "STABILITY");
@@ -112,6 +120,12 @@ int print_skill_info(int skill_id){
         return 0;
 }
 
+/**
+ * Gets attributes of specified skill
+ *
+ * @param skill_id The id number for the skill to be updated
+ * @return A string with the attributes of the specified skill
+ */
 std::string get_skill_info(int skill_id){
         float current_stability = get_skill_value(skill_id, "STABILITY");
         float current_difficulty = get_skill_value(skill_id, "DIFFICULTY");
@@ -125,133 +139,139 @@ std::string get_skill_info(int skill_id){
         return skill_info;
 }
 
+/**
+ * Maps from skill id to appropriate problem generation function
+ *
+ * @param skill_id The id number for the skill to be updated
+ * @return A pointer to an array with three strings: the problem, the solution, and notes for entry
+ */
 std::string* generate_problem(int skill_id)
 {
-        std::string* problem_and_solution = new std::string[2]; 
+        std::string* problem_array = new std::string[3]; 
         switch (skill_id){
                 case 1:
-                        problem_and_solution = generate_addition_problem();
+                        problem_array = generate_addition_problem();
                         break;
                 case 2:
-                        problem_and_solution = generate_subtraction_problem();
+                        problem_array = generate_subtraction_problem();
                         break;
                 case 3:
-                        problem_and_solution = generate_multiplication_problem();
+                        problem_array = generate_multiplication_problem();
                         break;
                 case 4:
-                        problem_and_solution = generate_power_rule_problem();
+                        problem_array = generate_power_rule_problem();
                         break;
                 case 5:
-                        problem_and_solution = generate_fraction_addition_problem();
+                        problem_array = generate_fraction_addition_problem();
                         break;
                 case 6:
-                        problem_and_solution = generate_two_by_two_det_problem();
+                        problem_array = generate_two_by_two_det_problem();
                         break;
                 case 7:
-                        problem_and_solution = generate_three_by_three_det_problem();
+                        problem_array = generate_three_by_three_det_problem();
                         break;
                 case 8:
-                        problem_and_solution = generate_quadratic_formula_problem();
+                        problem_array = generate_quadratic_formula_problem();
                         break;
                 case 9:
-                        problem_and_solution = generate_product_rule_problem();
+                        problem_array = generate_product_rule_problem();
                         break;
                 case 10:
-                        problem_and_solution = generate_sin_values_problem();
+                        problem_array = generate_sin_values_problem();
                         break;
                 case 11:
-                        problem_and_solution = generate_cos_values_problem();
+                        problem_array = generate_cos_values_problem();
                         break;
                 case 12:
-                        problem_and_solution = generate_tan_values_problem();
+                        problem_array = generate_tan_values_problem();
                         break;
                 case 13:
-                        problem_and_solution = generate_two_by_two_matrix_multiplication_problem();
+                        problem_array = generate_two_by_two_matrix_multiplication_problem();
                         break;
                 case 14:
-                        problem_and_solution = generate_matrix_vector_multiplication_problem();
+                        problem_array = generate_matrix_vector_multiplication_problem();
                         break;
                 case 15:
-                        problem_and_solution = generate_triangle_area_problem();
+                        problem_array = generate_triangle_area_problem();
                         break;
                 case 16:
-                        problem_and_solution = generate_circle_area_problem();
+                        problem_array = generate_circle_area_problem();
                         break;
                 case 17:
-                        problem_and_solution = generate_integration_power_rule_problem();
+                        problem_array = generate_integration_power_rule_problem();
                         break;
                 case 18:
-                        problem_and_solution = generate_trig_deriv_problem();
+                        problem_array = generate_trig_deriv_problem();
                         break;
                 case 19:
-                        problem_and_solution = generate_pythagorean_theorem_problem();
+                        problem_array = generate_pythagorean_theorem_problem();
                         break;
                 case 20:
-                        problem_and_solution = generate_partial_derivatives_problem();
+                        problem_array = generate_partial_derivatives_problem();
                         break;
 
                 default:
                         int base_skill_id = get_skill_value(skill_id, "BASE_SKILL_ID");
                         switch (base_skill_id){
                                 case 1:
-                                        problem_and_solution = generate_addition_problem();
+                                        problem_array = generate_addition_problem();
                                         break;
                                 case 2:
-                                        problem_and_solution = generate_subtraction_problem();
+                                        problem_array = generate_subtraction_problem();
                                         break;
                                 case 3:
-                                        problem_and_solution = generate_multiplication_problem();
+                                        problem_array = generate_multiplication_problem();
                                         break;
                                 case 4:
-                                        problem_and_solution = generate_power_rule_problem();
+                                        problem_array = generate_power_rule_problem();
                                         break;
                                 case 5:
-                                        problem_and_solution = generate_fraction_addition_problem();
+                                        problem_array = generate_fraction_addition_problem();
                                         break;
                                 case 6:
-                                        problem_and_solution = generate_two_by_two_det_problem();
+                                        problem_array = generate_two_by_two_det_problem();
                                         break;
                                 case 7:
-                                        problem_and_solution = generate_three_by_three_det_problem();
+                                        problem_array = generate_three_by_three_det_problem();
                                         break;
                                 case 8:
-                                        problem_and_solution = generate_quadratic_formula_problem();
+                                        problem_array = generate_quadratic_formula_problem();
                                         break;
                                 case 9:
-                                        problem_and_solution = generate_product_rule_problem();
+                                        problem_array = generate_product_rule_problem();
                                         break;
                                 case 10:
-                                        problem_and_solution = generate_sin_values_problem();
+                                        problem_array = generate_sin_values_problem();
                                         break;
                                 case 11:
-                                        problem_and_solution = generate_cos_values_problem();
+                                        problem_array = generate_cos_values_problem();
                                         break;
                                 case 12:
-                                        problem_and_solution = generate_tan_values_problem();
+                                        problem_array = generate_tan_values_problem();
                                         break;
                                 case 13:
-                                        problem_and_solution = generate_two_by_two_matrix_multiplication_problem();
+                                        problem_array = generate_two_by_two_matrix_multiplication_problem();
                                         break;
                                 case 14:
-                                        problem_and_solution = generate_matrix_vector_multiplication_problem();
+                                        problem_array = generate_matrix_vector_multiplication_problem();
                                         break;
                                 case 15:
-                                        problem_and_solution = generate_triangle_area_problem();
+                                        problem_array = generate_triangle_area_problem();
                                         break;
                                 case 16:
-                                        problem_and_solution = generate_circle_area_problem();
+                                        problem_array = generate_circle_area_problem();
                                         break;
                                 case 17:
-                                        problem_and_solution = generate_integration_power_rule_problem();
+                                        problem_array = generate_integration_power_rule_problem();
                                         break;
                                 case 18:
-                                        problem_and_solution = generate_trig_deriv_problem();
+                                        problem_array = generate_trig_deriv_problem();
                                         break;
                                 case 19:
-                                        problem_and_solution = generate_pythagorean_theorem_problem();
+                                        problem_array = generate_pythagorean_theorem_problem();
                                         break;
                                 case 20:
-                                        problem_and_solution = generate_partial_derivatives_problem();
+                                        problem_array = generate_partial_derivatives_problem();
                                         break;
 
                                 default:
@@ -259,5 +279,5 @@ std::string* generate_problem(int skill_id)
                                         break;
                         }
         }
-        return problem_and_solution;
+        return problem_array;
 }

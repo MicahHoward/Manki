@@ -4,6 +4,11 @@
 
 wxIMPLEMENT_APP(App);
 
+/**
+ * Root function for wxWidgets 
+ *
+ * @return True
+ */
 bool App::OnInit(){
         MainFrame* mainFrame = new MainFrame("Manki");
         mainFrame->SetClientSize(800, 600);
