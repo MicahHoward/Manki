@@ -2,13 +2,25 @@
 #include<cmath>
 #include<string>
 using namespace std;
+
+
+/**
+ * Gets the current time from the system clock
+ * @return The current time
+ */
 time_t get_current_time()
 {
         auto now = chrono::system_clock::now();
-        time_t currentTime = chrono::system_clock::to_time_t(now);
-        return currentTime;
+        time_t current_time = chrono::system_clock::to_time_t(now);
+        return current_time;
 }
  
+/**
+ * Takes a string representation of a float with too many digits past the decimal place and rounds it to two digits past the decimal
+ *
+ * @param input The string representation of the number to be rounded
+ * @return The string representation of the rounded number
+ */
 std::string return_rounded_number_string(std::string input){
         double input_double = std::stod(input);
         input_double = input_double * 100;

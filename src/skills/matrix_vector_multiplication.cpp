@@ -1,6 +1,11 @@
 #include <iostream>
 #include <random>
 
+/**
+ * Generates a string array that represents a matrix vector multiplication problem
+ *
+ * @return Returns a string representing a matrix vector multiplication problem, a string representing the solution, and an empty notes string 
+ */
 std::string* generate_matrix_vector_multiplication_problem() 
 {
         int min = 1;
@@ -27,10 +32,12 @@ std::string* generate_matrix_vector_multiplication_problem()
                 "\\begin{bmatrix}" + std::to_string(seventh_number) + " & " + std::to_string(eighth_number) + " & " + std::to_string(ninth_number) + "\\end{bmatrix}";
         std::string solution = "[" + std::to_string(first_number*seventh_number + second_number*eighth_number + third_number*ninth_number) 
                 + "," + std::to_string(fourth_number*seventh_number + fifth_number*eighth_number + sixth_number*ninth_number) + "]";
-        std::string* returnValue = new std::string[3];
-        returnValue[0] = problem;
-        returnValue[1] = solution;
-        returnValue[2] = "";
+        std::string notes = "";
 
-        return returnValue;
+        std::string* problem_array = new std::string[3];
+        problem_array[0] = problem;
+        problem_array[1] = solution;
+        problem_array[2] = notes;
+
+        return problem_array;
 }

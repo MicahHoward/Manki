@@ -83,12 +83,17 @@ int timed_coll_pane_height;
 wxTimer* problem_timer;
 int problem_time_in_milliseconds;
 
+/**
+ * Main function for Manki 
+ *
+ * @param title: the names for the top of the tab
+ * @return Returns a string representing an addition problem, a string representing the solution, and an empty notes string
+ */
 MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         initialize_database();
         int needs_welcome = insert_default_values();
         update_retrievability();
 
-        // Creates
         main_book = new wxSimplebook(this, wxID_ANY);
 
         auto main_panel = new wxPanel(main_book);
@@ -115,10 +120,8 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
         int number_of_skills = get_number_of_skills();
 
-
         // For whatever reason, wxWidgets doesn't like adding controls to the coll_pane itself
         // So we use GetPane() to add controls to it.
-
 
         due_arthimetic_win = due_arthimetic_coll_pane->GetPane();
         due_arthimetic_sizer = new wxGridSizer(0, 2, 0, 0);
@@ -180,7 +183,6 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         browser_box_sizer->Add(browser_back_button, 0, wxALIGN_CENTER, 5);
         browser_box_sizer->Add(not_retaining_coll_pane, 0, wxALIGN_CENTER, 5);
 
-
         // Sets up timed panel 
         wxPanel* timed_panel = new wxPanel(main_book);
         wxButton* timed_back_button = new wxButton(timed_panel, wxID_ANY, "Due Skills", wxPoint(150,50), wxSize(100,35));
@@ -200,7 +202,6 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         // Creates buttons for each skill
         std::string* skill_names = get_skill_names();
 
-
         std::map<int, int> skill_status;
         int current_skill_status;
 
@@ -210,8 +211,6 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
 
         }
 
-      
-
         main_book->AddPage(main_panel, "Welcome");
 
         // Sets up skill panel
@@ -220,7 +219,6 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         notes = new wxStaticText(skill_panel, wxID_ANY, "");
         textEntry = new wxTextCtrl(skill_panel, wxID_ANY, "", wxPoint(150,50), wxSize(400,35), wxTE_PROCESS_ENTER);
         back_button->Bind(wxEVT_BUTTON, &MainFrame::OnBackButtonClicked, this);
-        textEntry->Bind(wxEVT_TEXT, &MainFrame::OnTextChanged, this);
         textEntry->Bind(wxEVT_TEXT_ENTER, &MainFrame::OnTextEntered, this);
         image = new wxStaticBitmap(skill_panel, wxID_ANY, wxBitmap("problem.png", wxBITMAP_TYPE_PNG), wxPoint(150,50), wxSize(400, 100), wxCENTER);
 
@@ -229,7 +227,6 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         skill_box_sizer->Add(textEntry, 0, wxCENTER | wxALL, 10);
         skill_box_sizer->Add(notes, 0, wxALIGN_CENTER_HORIZONTAL, 10);
         skill_panel->SetSizer(skill_box_sizer);
-
 
         wxPanel* learnt_panel = new wxPanel(main_book);
         wxButton* learnt_back_button = new wxButton(learnt_panel, wxID_ANY, "Due Skills", wxPoint(150,50), wxSize(100,35));
@@ -246,8 +243,7 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         learnt_panel_sizer->Add(learnt_back_button, 0, wxALIGN_CENTER, 5);
         learnt_panel_sizer->Add(learnt_coll_pane, 0, wxALIGN_CENTER, 5);
 
-
-        MainFrame::UpdateMainPanel(); 
+        MainFrame::RefreshPanels(); 
 
         // Adds secondary panels to main_book
         main_book->AddPage(skill_panel, "Practice");
@@ -266,10 +262,21 @@ MainFrame::MainFrame(const wxString& title): wxFrame(nullptr, wxID_ANY, title) {
         }
 }
 
-void MainFrame::UpdateMainPanel(){
+/**
+ * Updates panels, moves skills from one panel to the next, and adjusts gui elements to scale 
+ *
+ */
+void MainFrame::RefreshPanels(){
 
         int number_of_skills = get_number_of_skills();
         std::cout << std::to_string(number_of_skills) + " is the number of skills returned\n";
+        due_arthimetic_win->DestroyChildren();
+        due_geometry_win->DestroyChildren();
+        due_algebra_win->DestroyChildren();
+        due_trigonometry_win->DestroyChildren();
+        due_linear_algebra_win->DestroyChildren();
+        due_calculus_win->DestroyChildren();
+
         learnt_win->DestroyChildren();
         not_retaining_win->DestroyChildren();
         timed_win->DestroyChildren();
@@ -286,7 +293,6 @@ void MainFrame::UpdateMainPanel(){
         
         // Creates buttons for each skill
         std::string* skill_names = get_skill_names();
-
 
         std::map<int, int> skill_status;
         std::map<int, std::string> skill_category;
@@ -308,13 +314,11 @@ void MainFrame::UpdateMainPanel(){
                 {
                         case 0:
                                if(skill_category[i] == "Arthimetic"){
-                                        std::cout << "Made it inside arthimetic adding\n";
                                         due_arthimetic_coll_pane_height += 35;
                                         due_arthimetic_sizer->Add(new wxButton(due_arthimetic_win, 2*(i+1), skill_names[i]), flags); 
                                         due_arthimetic_sizer->Add(new wxButton(due_arthimetic_win, 2*(i+1) + 1, "Stats"), flags);
                                         due_arthimetic_coll_pane->Fit();
                                         due_arthimetic_sizer->Layout();
-                                        std::cout << "Made it past arthimetic adding\n";
                                 } else if(skill_category[i] == "Geometry"){
                                         due_geometry_coll_pane_height += 35;
                                         due_geometry_sizer->Add(new wxButton(due_geometry_win, 2*(i+1), skill_names[i]), flags); 
@@ -339,7 +343,6 @@ void MainFrame::UpdateMainPanel(){
                                         due_linear_algebra_sizer->Add(new wxButton(due_linear_algebra_win, 2*(i+1) + 1, "Stats"), flags);
                                         due_linear_algebra_coll_pane->Fit();
                                         due_linear_algebra_sizer->Layout();
-
                                 }else if(skill_category[i] == "Calculus"){
                                         due_calculus_coll_pane_height += 35;
                                         due_calculus_sizer->Add(new wxButton(due_calculus_win, 2*(i+1), skill_names[i]), flags); 
@@ -347,7 +350,7 @@ void MainFrame::UpdateMainPanel(){
                                         due_calculus_coll_pane->Fit();
                                         due_calculus_sizer->Layout();
                                 }else{
-                                        std::cout << "Something bad happened in UpdateMainPanel switch\n";
+                                        std::cout << "Something bad happened in RefreshPanels switch\n";
                                         std::cout << skill_category[i] + "\n";
                                 }
 
@@ -362,13 +365,11 @@ void MainFrame::UpdateMainPanel(){
                         case 2:
                                 if(get_skill_retaining(i+1) == "TRUE"){
                                         if(skill_category[i] == "Arthimetic"){
-                                                std::cout << "Made it inside arthimetic adding\n";
                                                 due_arthimetic_coll_pane_height += 35;
                                                 due_arthimetic_sizer->Add(new wxButton(due_arthimetic_win, 2*(i+1), skill_names[i]), flags); 
                                                 due_arthimetic_sizer->Add(new wxButton(due_arthimetic_win, 2*(i+1) + 1, "Stats"), flags);
                                                 due_arthimetic_coll_pane->Fit();
                                                 due_arthimetic_sizer->Layout();
-                                                std::cout << "Made it past arthimetic adding\n";
                                         } else if(skill_category[i] == "Geometry"){
                                                 due_geometry_coll_pane_height += 35;
                                                 due_geometry_sizer->Add(new wxButton(due_geometry_win, 2*(i+1), skill_names[i]), flags); 
@@ -393,7 +394,6 @@ void MainFrame::UpdateMainPanel(){
                                                 due_linear_algebra_sizer->Add(new wxButton(due_linear_algebra_win, 2*(i+1) + 1, "Stats"), flags);
                                                 due_linear_algebra_coll_pane->Fit();
                                                 due_linear_algebra_sizer->Layout();
-
                                         }else if(skill_category[i] == "Calculus"){
                                                 due_calculus_coll_pane_height += 35;
                                                 due_calculus_sizer->Add(new wxButton(due_calculus_win, 2*(i+1), skill_names[i]), flags); 
@@ -401,11 +401,10 @@ void MainFrame::UpdateMainPanel(){
                                                 due_calculus_coll_pane->Fit();
                                                 due_calculus_sizer->Layout();
                                         }else{
-                                                std::cout << "Something bad happened in UpdateMainPanel switch\n";
+                                                std::cout << "Something bad happened in RefreshPanels switch\n";
                                                 std::cout << skill_category[i] + "\n";
                                         }
-
-                                       break;
+                                        break;
                                 } else{
                                         not_retaining_coll_pane_height += 35;
                                         not_retaining_sizer->Add(new wxButton(not_retaining_win, 2*(i+1), skill_names[i]), flags);
@@ -425,7 +424,6 @@ void MainFrame::UpdateMainPanel(){
                 Connect(500*(i+1), wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
                 Connect(500*(i+1) + 1, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnAddTimedSkillButtonClicked));
 
-         
                 if(not_retaining == false){
                         Connect(2*(i+1), wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnSkillButtonClicked));
                         Connect(2*(i+1) + 1, wxEVT_BUTTON, wxCommandEventHandler(MainFrame::OnStatsButtonClicked));
@@ -433,9 +431,7 @@ void MainFrame::UpdateMainPanel(){
                 not_retaining = false;
         }
 
-
         // Adds text to empty windows
-
         if(learnt_win->GetChildren().size() == 0){
                 learnt_coll_pane_height += 35;
                 learnt_sizer->Add(new wxStaticText(learnt_win, wxID_ANY, "No skills learnt and not due"));
@@ -461,8 +457,12 @@ void MainFrame::UpdateMainPanel(){
         main_sizer->Layout();
 }
 
+/**
+ * Adjusts collapsible pane's height based off of height 
+ *
+ * @param evt: The CollapsiblePaneEvent that specifies which collapsible pane it is
+ */
 void MainFrame::OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& evt) {
-                
                 main_sizer->Layout();
                 int adjusted_pane_id = evt.GetId();
                 int adjusted_pane_height;
@@ -509,7 +509,6 @@ void MainFrame::OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& evt) {
 
                 }
 
-
                 if(adjusted_pane->IsCollapsed() == true){
                         adjusted_pane->SetMinSize(wxSize(400, 20));
                 } else{
@@ -521,8 +520,12 @@ void MainFrame::OnCollapsiblePaneClicked(wxCollapsiblePaneEvent& evt) {
                 learnt_panel_sizer->Layout();
                 browser_box_sizer->Layout();
                 timed_box_sizer->Layout();
-
 }
+
+/**
+ * Checks user's answer when the timer runs out 
+ *
+ */
 
 void MainFrame::OnTimer(wxTimerEvent&){
         std::string final_answer = std::string(textEntry->GetLineText(0));
@@ -530,7 +533,7 @@ void MainFrame::OnTimer(wxTimerEvent&){
                 wxMessageBox(wxT("The solution was \"" + solution + "\"."), "Correct!");
                 update_fsrs_on_answer(current_skill_id, 3);
                 textEntry->Clear();
-                MainFrame::UpdateMainPanel();
+                MainFrame::RefreshPanels();
                 main_book->SetSelection(last_selection);
                 problem_timer->Stop();
         } else{
@@ -542,11 +545,14 @@ void MainFrame::OnTimer(wxTimerEvent&){
         }
 }
 
+/**
+ * Generates a problem of the appropriate skill and moves to the skill panel when a skill button is clicked 
+ */
 void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
-        // skillIDs start at 1 and button ids start at 2, so we subtract 1
-        int skillID = (evt.GetId()/2);
-        std::string* problem_and_solution = generate_problem(skillID);
-        double time = get_skill_value(skillID, "TIME");
+        // skill_ids start at 1 and button ids start at 2, so we subtract 1
+        int skill_id = (evt.GetId()/2);
+        std::string* problem_and_solution = generate_problem(skill_id);
+        double time = get_skill_value(skill_id, "TIME");
         problem_time_in_milliseconds = time;
 
         std::cout << "TIME is " + std::to_string(time) + "\n";
@@ -565,7 +571,7 @@ void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
         solution = problem_and_solution[1];
         notes->SetLabel(problem_and_solution[2]);
 
-        current_skill_id = skillID;
+        current_skill_id = skill_id;
         main_book->SetSelection(1);
 
         if(time != -1){
@@ -573,9 +579,13 @@ void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
         }
 }
 
-void MainFrame::GenerateNewProblem(int skillID) {
-        // skillIDs start at 1 and button ids start at 2, so we subtract 1
-        std::string* problem_and_solution = generate_problem(skillID);
+/**
+ * Generates a new problem and creates an image for a specified skill 
+ *
+ * @param skill_id The id number of the skill for which to generate a problem
+ */
+void MainFrame::GenerateNewProblem(int skill_id) {
+        std::string* problem_and_solution = generate_problem(skill_id);
 
         // TODO: REPLACE THIS GARBAGE BY SWITCHING TO MicroLaTeX OR SOME OTHER LIBRARY
         int mypid = fork();
@@ -597,44 +607,67 @@ void MainFrame::GenerateNewProblem(int skillID) {
                                 break;
                         }
                 }
-
         }
-        current_skill_id = skillID;
+        current_skill_id = skill_id;
         main_book->SetSelection(1);
-
 }
 
+/**
+ * Sets the main_book selection and what the back button should do after the Browser Button is clicked 
+ *
+ * @param evt Generated by clicking the button, not used 
+ */
 void MainFrame::OnBrowserButtonClicked(wxCommandEvent& evt) {
         last_selection = 2;
         main_book->SetSelection(2);
         textEntry->Clear();
 }
 
+/**
+ * Sets the main_book selection and what the back button should do after the Timed Skills Button is clicked 
+ *
+ * @param evt Generated by clicking the button, not used 
+ */
 void MainFrame::OnTimedSkillsButtonClicked(wxCommandEvent& evt) {
         last_selection = 3;
         main_book->SetSelection(3);
         textEntry->Clear();
 }
 
+/**
+ * Sets the main_book selection and what the back button should do after the Learnt Skills Button is clicked 
+ *
+ * @param evt Generated by clicking the button, not used 
+ */
 void MainFrame::OnLearntButtonClicked(wxCommandEvent& evt) {
         last_selection = 4;
         main_book->SetSelection(4);
         textEntry->Clear();
 }
 
+/**
+ * Gets stats and displays them in message box on button click
+ *
+ * @param evt Generated by clicking the button used to find the skill_id 
+ */
 void MainFrame::OnStatsButtonClicked(wxCommandEvent& evt) {
-        // skillIDs start at 1 and button ids start at 2, so we subtract 1
-        int skillID = ((evt.GetId()-1)/2);
-        std::string stats = get_skill_info(skillID);
-        std::string skill_name = get_skill_name(skillID);
+        // skill_ids start at 1 and button ids start at 2, so we subtract 1
+        int skill_id = ((evt.GetId()-1)/2);
+        std::string stats = get_skill_info(skill_id);
+        std::string skill_name = get_skill_name(skill_id);
 
         wxMessageBox(stats, skill_name + " Stats");
 }
 
+/**
+ * Changes skill retaining to true and refreshes panels on button click
+ *
+ * @param evt Generated by clicking the button used to find the skill_id 
+ */
 void MainFrame::OnAddSkillButtonClicked(wxCommandEvent& evt) {
-        // skillIDs start at 1 and button ids start at 2, so we subtract 1
-        int skillID = ((evt.GetId()-1)/2);
-        update_skill_value(skillID, "RETAINING", "TRUE");
+        // skill_ids start at 1 and button ids start at 2, so we subtract 1
+        int skill_id = ((evt.GetId()-1)/2);
+        update_skill_value(skill_id, "RETAINING", "TRUE");
 
         wxMessageBox("Skill Added!", "Success!");
         wxWindow* skill_ctrl = wxWindow::FindWindowById(evt.GetId()-1, this);
@@ -642,17 +675,22 @@ void MainFrame::OnAddSkillButtonClicked(wxCommandEvent& evt) {
         skill_ctrl->Destroy();
         add_ctrl->Destroy();
         browser_box_sizer->Layout(); 
-        MainFrame::UpdateMainPanel();
+        MainFrame::RefreshPanels();
         main_sizer->Layout();
 }
 
+/**
+ * Creates timed version of skill with time limit determined by user on button click
+ *
+ * @param evt Generated by clicking the button used to find the skill_id 
+ */
 void MainFrame::OnAddTimedSkillButtonClicked(wxCommandEvent& evt) {
-        // skillIDs start at 1 and button ids start at 2, so we subtract 1
-        int skillID = ((evt.GetId()-1)/500);
+        // skill_ids start at 1 and button ids start at 2, so we subtract 1
+        int skill_id = ((evt.GetId()-1)/500);
 
         int time_in_milliseconds = wxGetNumberFromUser("", "Enter your time limit in milliseconds", "Enter time limit", 5000, 0, 60000);
 
-        int new_skill_id = insert_timed_skill(skillID, time_in_milliseconds);
+        int new_skill_id = insert_timed_skill(skill_id, time_in_milliseconds);
         update_skill_value(new_skill_id, "RETAINING", "TRUE");
         wxMessageBox("Timed Skill Added!", "Success!");
         wxWindow* skill_ctrl = wxWindow::FindWindowById(evt.GetId()-1, this);
@@ -660,20 +698,21 @@ void MainFrame::OnAddTimedSkillButtonClicked(wxCommandEvent& evt) {
         skill_ctrl->Destroy();
         add_ctrl->Destroy();
         browser_box_sizer->Layout(); 
-        MainFrame::UpdateMainPanel();
+        MainFrame::RefreshPanels();
         main_sizer->Layout();
 }
 
-void MainFrame::OnTextChanged(wxCommandEvent& evt) {
-        wxString str = wxString::Format("Text: %s", evt.GetString());
-}
-
+/**
+ * Checks answer when the user hits enter
+ *
+ * @param evt Generated by hitting enter, not used
+ */
 void MainFrame::OnTextEntered(wxCommandEvent& evt) {
         if(return_spaceless_string(std::string(evt.GetString())) == return_spaceless_string(solution)){
                 wxMessageBox(wxT("The solution was \"" + solution + "\"."), "Correct!");
                 update_fsrs_on_answer(current_skill_id, 3);
                 textEntry->Clear();
-                MainFrame::UpdateMainPanel();
+                MainFrame::RefreshPanels();
                 main_book->SetSelection(last_selection);
                 problem_timer->Stop();
         } else{
@@ -684,6 +723,9 @@ void MainFrame::OnTextEntered(wxCommandEvent& evt) {
         }
 }
 
+/**
+ * Takes user back to the last panel they were on. Stops timer if timer was started.
+ */
 void MainFrame::OnBackButtonClicked(wxCommandEvent& evt) {
         problem_timer->Stop();
         main_book->SetSelection(last_selection);
@@ -691,12 +733,12 @@ void MainFrame::OnBackButtonClicked(wxCommandEvent& evt) {
         main_sizer->Layout();
 }
 
-
+/**
+ * Takes user to due skills page.
+ */
 void MainFrame::OnMySkillsButtonClicked(wxCommandEvent& evt) {
         last_selection = 0;
         main_book->SetSelection(0);
         textEntry->Clear();
         main_sizer->Layout();
 }
-
-

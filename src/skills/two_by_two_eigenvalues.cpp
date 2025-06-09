@@ -1,6 +1,11 @@
 #include <iostream>
 #include <random>
 
+/**
+ * Generates a string array that represents a 2x2 matrix eigenvalues problem 
+ *
+ * @return Returns a string representing a 2x2 matrix eigenvalues problem, a string representing the solution, and an empty notes string 
+ */
 std::string* generate_two_by_two_eigenvalues_problem() 
 {
         int min = -10;
@@ -23,10 +28,12 @@ std::string* generate_two_by_two_eigenvalues_problem()
 
         std::string problem = "\\begin{bmatrix}" + std::to_string(first_number) + " & " + std::to_string(second_number) + "\\\\" + std::to_string(third_number) + " & " + std::to_string(fourth_number) + "\\end{bmatrix}";
         std::string solution = std::to_string(determinant);
-        std::string* returnValue = new std::string[3];
-        returnValue[0] = problem;
-        returnValue[1] = solution;
-        returnValue[2] = "";
+        std::string notes = "";
 
-        return returnValue;
+        std::string* problem_array = new std::string[3];
+        problem_array[0] = problem;
+        problem_array[1] = solution;
+        problem_array[2] = notes; 
+
+        return problem_array;
 }
