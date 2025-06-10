@@ -1,5 +1,5 @@
-#include "platform/cairo/graphic_cairo.h"
-#include "latex.h"
+#include "MicroTeX/platform/cairo/graphic_cairo.h"
+#include "MicroTeX/latex.h"
 #include <gtkmm.h>
 #include <iostream>
 #include <string>
