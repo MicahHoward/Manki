@@ -1,0 +1,4 @@
+/home/micah/Desktop/Personal_Projects/Manki/src/lib/MicroTeX/build/CMakeFiles/LaTeX.dir
+/home/micah/Desktop/Personal_Projects/Manki/src/lib/MicroTeX/build/CMakeFiles/LaTeXGtkSample.dir
+/home/micah/Desktop/Personal_Projects/Manki/src/lib/MicroTeX/build/CMakeFiles/edit_cache.dir
+/home/micah/Desktop/Personal_Projects/Manki/src/lib/MicroTeX/build/CMakeFiles/rebuild_cache.dir
