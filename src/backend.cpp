@@ -25,7 +25,6 @@
 #include "skills/partial_derivatives.h"
 #include "db.h"
 #include "fsrs.h"
-#include "latexpp/latex.hpp"
 
 std::string user_response;
 
@@ -37,25 +36,6 @@ std::string return_spaceless_string(std::string input){
                 }
         }
         return output;
-}
-
-
-
-int generate_latex_image(std::string expression)
-{
-	// Single class
-	Latex latex;
-
-	// Convert to PNG, store in 'problem.png'
-    std::cout << "made it to to_png\n";
-	latex.to_png(expression, "problem.png");
-
-    std::cout << "made it past to_png\n";
-
-
-	// Convert to HTML, returns a HTML snippet
-	std::string html = latex.to_html(expression);
-    return 0;
 }
 
 int update_fsrs_on_answer(int skillID, int grade)
