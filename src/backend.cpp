@@ -28,7 +28,6 @@
 #include "skills/cone_volume.h"
 #include "db.h"
 #include "fsrs.h"
-#include "latexpp/latex.hpp"
 
 /**
  * Returns a version of the input string with all spaces removed. Used in comparing user guesses with correct answers
@@ -45,6 +44,7 @@ std::string return_spaceless_string(std::string input){
         }
         return output;
 }
+
 
 /**
  * Updates stability, difficulty, and retrievability for a skill based off of whether or not the user guessed correctly

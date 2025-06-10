@@ -7,6 +7,7 @@
 #include "backend.h"
 #include "db.h"
 #include "fsrs.h"
+#include "latex2png.h"
 #include <chrono>
 #include <thread>
 #include <map>
@@ -557,14 +558,11 @@ void MainFrame::OnSkillButtonClicked(wxCommandEvent& evt) {
 
         std::cout << "TIME is " + std::to_string(time) + "\n";
 
-        // TODO: REPLACE THIS GARBAGE BY SWITCHING TO MicroLaTeX OR SOME OTHER LIBRARY
-        int mypid = fork();
-
-        if(0 == mypid){
-                char* args[]={"./latex_generator", problem_and_solution[0].data(), "problem.png", NULL};
-                execvp(args[0], args);
-
-        }
+        std::wstring latex_code(problem_and_solution[0].begin(), problem_and_solution[0].end());
+        std::wcout << latex_code + "\n";
+        std::string problem = "problem.png";
+        generate_png(latex_code, problem);
+        std::cout << "Made it past png \n";
         // waits for
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         image->SetBitmap(wxBitmap("problem.png", wxBITMAP_TYPE_PNG));
