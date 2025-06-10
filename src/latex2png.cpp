@@ -6,6 +6,9 @@
 
 using namespace tex;
 
+/**
+ * Class used to initiate LaTeX
+ */
 class TexGuard {
 public:
     TexGuard() {
@@ -13,7 +16,14 @@ public:
     }
 
 };
-
+/**
+ * Function that uses MicroTeX to generate problem pngs for Manki
+ *
+ * @param code the LaTeX code to be turned into an image
+ * @param file the name of the png file to create
+ *
+ * @return 0
+ */
 int generate_png(std::wstring& code, std::string& file) {
         TexGuard texGuard;
         std::cout << "Made it to l18\n";
