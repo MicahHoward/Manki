@@ -2,6 +2,7 @@
 #include <wx/wx.h>
 #include <wx/collpane.h>
 
+// wxWidgets main class
 class MainFrame : public wxFrame
 {
         public:
