@@ -1,6 +1,11 @@
 #include <iostream>
 #include <random>
 
+/**
+ * Generates a string array that represents a 2x2 matrix multiplication problem 
+ *
+ * @return Returns a string representing a 2x2 matrix multiplication problem, a string representing the solution, and an empty notes string 
+ */
 std::string* generate_two_by_two_matrix_multiplication_problem() 
 {
         int min = 1;
@@ -10,7 +15,7 @@ std::string* generate_two_by_two_matrix_multiplication_problem()
         std::mt19937 gen(rd());
         std::uniform_int_distribution<> distrib(min, max);
 
-        int first_number = distrib(gen);
+        int first_number = distrib(gen); 
         int second_number = distrib(gen);
         int third_number = distrib(gen);
         int fourth_number = distrib(gen);
@@ -27,10 +32,12 @@ std::string* generate_two_by_two_matrix_multiplication_problem()
         std::string solution = "[[" + std::to_string(first_number*fifth_number + second_number*seventh_number) 
                 + ", " + std::to_string(first_number*sixth_number + second_number*eighth_number) + "], [" + 
                 std::to_string(third_number*fifth_number + fourth_number*seventh_number) + ", " + std::to_string(third_number*sixth_number + fourth_number*eighth_number) + "]]";
-        std::string* returnValue = new std::string[3];
-        returnValue[0] = problem;
-        returnValue[1] = solution;
-        returnValue[2] = "";
+        std::string notes = "";
 
-        return returnValue;
+        std::string* problem_array = new std::string[3];
+        problem_array[0] = problem;
+        problem_array[1] = solution;
+        problem_array[2] = notes; 
+
+        return problem_array;
 }

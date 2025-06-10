@@ -1,6 +1,11 @@
 #include <iostream>
 #include <random>
 
+/**
+ * Generates a string array that represents an integration power rule problem
+ *
+ * @return Returns a string representing a integration power rule problem, a string representing the solution, and an empty notes string 
+ */
 std::string* generate_integration_power_rule_problem() 
 {
         int min = 1;
@@ -21,10 +26,12 @@ std::string* generate_integration_power_rule_problem()
 
                 solution = "\\frac{" + std::to_string(coefficient) + "}{" + std::to_string(exponent+1) + "}x^{" + std::to_string(exponent+1) + "} + C";
         }
-        std::string* returnValue = new std::string[3];
-        returnValue[0] = problem;
-        returnValue[1] = solution;
-        returnValue[2] = "";
+        std::string notes = "";
 
-        return returnValue;
+        std::string* problem_array = new std::string[3];
+        problem_array[0] = problem;
+        problem_array[1] = solution;
+        problem_array[2] = notes; 
+
+        return problem_array;
 }

@@ -1,6 +1,11 @@
 #include <iostream>
 #include <random>
 
+/**
+ * Generates a string array that represents a 3x3 matrix determinant problem 
+ *
+ * @return Returns a string representing a 3x3 matrix determinant problem, a string representing the solution, and an empty notes string 
+ */
 std::string* generate_three_by_three_det_problem() 
 {
         int min = 1;
@@ -20,10 +25,12 @@ std::string* generate_three_by_three_det_problem()
                 + "\\\\" + std::to_string(matrix[3]) + " & " + std::to_string(matrix[4]) + " & " + std::to_string(matrix[5])
                 + "\\\\" + std::to_string(matrix[6]) + " & " + std::to_string(matrix[7]) + " & " + std::to_string(matrix[8]) + "\\end{bmatrix}";
         std::string solution = std::to_string(determinant);
-        std::string* returnValue = new std::string[3];
-        returnValue[0] = problem;
-        returnValue[1] = solution;
-        returnValue[2] = "";
+        std::string notes = "";
 
-        return returnValue;
+        std::string* problem_array = new std::string[3];
+        problem_array[0] = problem;
+        problem_array[1] = solution;
+        problem_array[2] = notes;
+
+        return problem_array;
 }
